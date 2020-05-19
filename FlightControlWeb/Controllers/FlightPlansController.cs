@@ -12,27 +12,29 @@ namespace FlightControlWeb.Controllers
     [ApiController]
     public class FlightPlansController : ControllerBase
     {
-        private IFlightsManager flightsManager;
+        private IFlightsManager flightsManager=new FlightsManager();
 
         // GET: api/FlightPlans
         [HttpGet]
-        public IEnumerable<Flight> GetAllFlight()
+        public IEnumerable<FlightPlan> GetAllFlight()
         {
             return flightsManager.GetAllFlights();
         }
 
         // GET: api/FlightPlans/5
         [HttpGet("{id}", Name = "Get")]
-        public string Get(int id)
+        public FlightPlan Get(string id)
         {
-            return "value";
+            return flightsManager.GetFlight(id);
+            
         }
 
         // POST: api/FlightPlans
         [HttpPost]
-        public void Post([FromBody] Flight f)
+        public FlightPlan Post([FromBody] FlightPlan f)
         {
             flightsManager.AddFlight(f);
+            return f;
         }
 
         // PUT: api/FlightPlans/5

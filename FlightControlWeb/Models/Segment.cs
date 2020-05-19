@@ -9,6 +9,6 @@ namespace FlightControlWeb.Models
     {
         public double longitude { get; set; }
         public double latitude { get; set; }
-        public int timespan_seconds { get; set; }
+        public double timespan_seconds { get; set; }
     }
 }

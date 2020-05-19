@@ -16,8 +16,7 @@ namespace FlightControlWeb.Models
         public IEnumerable<Segment> segments { get; set; }
 
 
-
-
+       
 
     }
 }

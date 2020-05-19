@@ -11,6 +11,7 @@ namespace FlightControlWeb.Models
         //FlightPlan GetFlightById(int id);
         void AddFlight(FlightPlan f);
         //void UpdateFight(FlightPlan f);
-        void DeleteFlight(int id);
+        void DeleteFlight(string id);
+        FlightPlan GetFlight(string id);
     }
 }
