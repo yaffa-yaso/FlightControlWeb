@@ -11,64 +11,34 @@ namespace FlightControlWeb.Models
 
        private static ConcurrentDictionary<string, FlightPlan> flights = new ConcurrentDictionary<string, FlightPlan>();
 
-       
-
-        //public FlightPlan GetFlightById(int id)
-        //{
-        //    FlightPlan flight;
-        //    if(flights.TryGetValue(id, out flight))
-        //    {
-        //        // doesn't exist
-        //        throw new Exception("flight not found");
-               
-        //    }
-        //    return flight;
-        //}
-
         public void AddFlight(FlightPlan f)
         {
             FlightPlan x = f;
-            string key = GenerateNewRandom();
-           bool item =  flights.TryAdd(key, f);
-
+            Random rnd = new Random();
+            string key = rnd.Next(9).ToString() + rnd.Next(9).ToString() + rnd.Next(9).ToString() + rnd.Next(9).ToString();
+            key += (char)rnd.Next('A', 'Z') + (char)rnd.Next('a', 'z');
+            bool item =  flights.TryAdd(key, f);
         }
-
-        //public void UpdateFight(Flight f)
-        //{
-        //    Flight flight;
-        //    if (flights.TryGetValue(GenerateNewRandom(), out flight))
-        //    {
-        //        // doesn't exist
-        //        throw new Exception("flight not found");
-        //    }
-        //    flight.id = f.id;
-        //    flight.is_external = f.is_external;
-        //    flight.latitude = f.latitude;
-        //    flight.longitude = f.longitude;
-        //    flight.passengers = f.passengers;
-
-        //}
 
        public FlightPlan GetFlight(string id)
         {
             FlightPlan flight;
             if (flights.TryGetValue(id, out flight))
             {
-                // doesn't exist
-                throw new Exception("flight not found");
+                return flight;
             }
             else
             {
-                return flight;
+                // doesn't exist
+                return null;
             }
 
         }
 
-
         public void DeleteFlight(string id)
         {
             FlightPlan removedItem;
-            bool result = flights.TryRemove(id, out removedItem);
+            flights.TryRemove(id, out removedItem);
         }
         public IEnumerable<FlightPlan> GetAllFlights()
         {

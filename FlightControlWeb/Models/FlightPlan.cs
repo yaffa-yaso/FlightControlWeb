@@ -7,7 +7,6 @@ namespace FlightControlWeb.Models
 {
     public class FlightPlan
     {
-
         public InitialLocation initial_location { get; set; }
 
         public int passengers { get; set; }

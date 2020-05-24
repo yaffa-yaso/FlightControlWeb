@@ -1,46 +1,38 @@
-﻿//using System;
-//using System.Collections.Generic;
-//using System.Linq;
-//using System.Threading.Tasks;
-//using Microsoft.AspNetCore.Http;
-//using Microsoft.AspNetCore.Mvc;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using FlightControlWeb.Models;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 
-//namespace FlightControlWeb.Controllers
-//{
-//    [Route("api/[controller]")]
-//    [ApiController]
-//    public class ServersController : ControllerBase
-//    {
-//        // GET: api/Servers
-//        [HttpGet]
-//        public IEnumerable<string> Get()
-//        {
-//            return new string[] { "value1", "value2" };
-//        }
+namespace FlightControlWeb.Controllers
+{
+    [Route("api/[controller]")]
+    [ApiController]
+    public class ServersController : ControllerBase
+    {
+        private ServerManager serverManager = new ServerManager();
 
-//        // GET: api/Servers/5
-//        [HttpGet("{id}", Name = "Get")]
-//        public string Get(int id)
-//        {
-//            return "value";
-//        }
+        // GET: api/servers
+        [HttpGet]
+        public IEnumerable<Server> Get()
+        {
+            return serverManager.GetAllServers();
+        }
 
-//        // POST: api/Servers
-//        [HttpPost]
-//        public void Post([FromBody] string value)
-//        {
-//        }
+        // POST: api/servers
+        [HttpPost]
+        public void Post([FromBody] Server s)
+        {
+            serverManager.AddServer(s);
+        }
 
-//        // PUT: api/Servers/5
-//        [HttpPut("{id}")]
-//        public void Put(int id, [FromBody] string value)
-//        {
-//        }
-
-//        // DELETE: api/ApiWithActions/5
-//        [HttpDelete("{id}")]
-//        public void Delete(int id)
-//        {
-//        }
-//    }
-//}
+        // DELETE: api/servers/{id}
+        [HttpDelete("{id}")]
+        public void Delete(string id)
+        {
+            serverManager.DeleteServer(id);
+        }
+    }
+}
