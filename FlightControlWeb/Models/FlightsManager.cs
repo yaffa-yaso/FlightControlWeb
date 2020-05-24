@@ -9,9 +9,11 @@ namespace FlightControlWeb.Models
     public class FlightsManager: IFlightsManager
     {
 
-       private static ConcurrentDictionary<string, FlightPlan> flights = new ConcurrentDictionary<string, FlightPlan>();
+       private static ConcurrentDictionary<string, FlightPlan> flightPlans = new ConcurrentDictionary<string, FlightPlan>();
+        private static ConcurrentDictionary<string, FlightPlan> flights = new ConcurrentDictionary<string, FlightPlan>();
 
-       
+
+
 
         //public FlightPlan GetFlightById(int id)
         //{
@@ -20,7 +22,7 @@ namespace FlightControlWeb.Models
         //    {
         //        // doesn't exist
         //        throw new Exception("flight not found");
-               
+
         //    }
         //    return flight;
         //}
@@ -29,7 +31,7 @@ namespace FlightControlWeb.Models
         {
             FlightPlan x = f;
             string key = GenerateNewRandom();
-           bool item =  flights.TryAdd(key, f);
+            bool item = flightPlans.TryAdd(key, f);
 
         }
 
@@ -52,7 +54,7 @@ namespace FlightControlWeb.Models
        public FlightPlan GetFlight(string id)
         {
             FlightPlan flight;
-            if (flights.TryGetValue(id, out flight))
+            if (flightPlans.TryGetValue(id, out flight))
             {
                 // doesn't exist
                 throw new Exception("flight not found");
@@ -68,11 +70,11 @@ namespace FlightControlWeb.Models
         public void DeleteFlight(string id)
         {
             FlightPlan removedItem;
-            bool result = flights.TryRemove(id, out removedItem);
+            bool result = flightPlans.TryRemove(id, out removedItem);
         }
         public IEnumerable<FlightPlan> GetAllFlights()
         {
-            return flights.Values.ToArray();
+            return flightPlans.Values.ToArray();
         }
         private static string GenerateNewRandom()
         {

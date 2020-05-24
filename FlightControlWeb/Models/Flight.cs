@@ -8,7 +8,8 @@ namespace FlightControlWeb.Models
 {
     public class Flight
     {
-        public int id{get; set;}
+        
+        public string id{get; set;}
         public double longitude{get; set;}
         public double latitude { get; set; }
         public int passengers { get; set; }
@@ -17,6 +18,15 @@ namespace FlightControlWeb.Models
 
         public bool is_external { get; set; }
 
+        public Flight(string id, double longitude, double latitude, int passengers, string company_name, string date_time)
+        {
+            this.id = id;
+            this.longitude = longitude;
+            this.latitude = latitude;
+            this.passengers = passengers;
+            this.company_name = company_name;
+            this.date_time = date_time;
+        }
 
     }
 }

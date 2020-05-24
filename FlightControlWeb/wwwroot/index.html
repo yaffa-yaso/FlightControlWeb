@@ -4,35 +4,103 @@
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
+    <!--<link rel="stylesheet" type="text/css" href="my.css">-->
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+    <style>
+        #map {
+            height: 400px;
+            width: 100%;
+        }
+    </style>
+    <style>
+        .deteilsBox {
+            height: 100%;
+            width: 100%;
+            padding: 10px;
+            text-align: center;
+        }
 
-    <title>Hello, world!</title>
+        .titlelBox {
+            background-color: coral;
+            height: 35px;
+            width: 150px;
+            position: relative;
+            left: 350px;
+            bottom: 25px;
+        }
+    </style>
+    <!--<title>Hello, world!</title>-->
 </head>
 <body>
-    <h1>Hello, world!</h1>
 
-    <div calss="container">
-        <div class="rows">
-            <div class="col">
-                row 1 col1
-            </div>
-            <div class="col">
-                row 1 col 2
-            </div>
-        </div>"
-        <div class="rows">
-            <div class="col">
-                row 2 col1
-            </div>
-            <div class="col">
-                row 2 col 2
-            </div>
-        </div>"
+    <h1 id="test">Hello, world!</h1>
+    <script>
+        var seconds = 0;
+        var mapRefresh = setInterval(refresh, 2000);
+        function refresh() {
+            document.getElementById("test").innerHTML = seconds+"seconds";
+            seconds++;
+        }
+    </script>
+    <script>
+        function initMap() {
+            var options = {
+                zoom: 8,
+                center: { lat: 42.3601, lng: -71.0589 }
+            }
+            var map = new
+                google.maps.Map(document.getElementById('map'), options);
+        }
+        //Add marker
+        function addMarker(coords) {
+            var marker = new google.maps.marker({
+                position: coords,
+                map: map,
+                icon: 'https://lh3.googleusercontent.com/proxy/PX3dI_Z8iG-RPpd4eZSINR4ft1P4Ge_x6btQ8t8VzN_qRynCiB5WBoPyc2rSzgUT-n5Gd1n7vkDLkaSfgONcjtnvxNrPrlV6EgoLVIgZ483zVOT5dA1Ma1A1Tw'
+
+            });
+        }
+
+        var markers = [
+
+        ];
+    </script>
 
 
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBpoEuI5T2gtPyzKyEPYrY6nXAREd1tJYM&callback=initMap"
+            async defer></script>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-10">
+                <div id="map" class="border border-dark round rounded"></div>
+            </div>
+            <div class="col">
+                <div class="deteilsBox border border border-dark rounded" style="background-color:darkseagreen;">
+
+                </div>
+            </div>
+
+        </div>
+        <div class="row -lg">
+            <div class="col-10 border">
+                <div class="deteilsBox border border border-dark rounded" style="background-color:darkseagreen;">
+
+                    <div class="titlelBox border border border-dark rounded">
+                        deteile
+                    </div>
+                </div>
+
+            </div>
+            <div class="col">
+                <div class="deteilsBox border border border-dark rounded" style="background-color:darkseagreen;">
+
+                </div>
+            </div>
+        </div>
     </div>
+
 
 
 
