@@ -14,21 +14,21 @@ namespace FlightControlWeb.Controllers
     {
         private ServerManager serverManager = new ServerManager();
 
-        // GET: api/servers
+        // GET: api/Servers
         [HttpGet]
         public IEnumerable<Server> Get()
         {
             return serverManager.GetAllServers();
         }
 
-        // POST: api/servers
+        // POST: api/Servers
         [HttpPost]
         public void Post([FromBody] Server s)
         {
             serverManager.AddServer(s);
         }
 
-        // DELETE: api/servers/{id}
+        // DELETE: api/ApiWithActions/5
         [HttpDelete("{id}")]
         public void Delete(string id)
         {
