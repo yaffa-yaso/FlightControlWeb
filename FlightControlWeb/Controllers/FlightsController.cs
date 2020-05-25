@@ -27,16 +27,8 @@ namespace FlightControlWeb.Controllers
                 DateTime finishTime = startTime.AddSeconds(airTime);
 
                 if (startTime < relative_to && finishTime > relative_to) {
-                    Flight flight = new Flight
-                    {
-                        flight_id = "1",
-                        longitude = item.initial_location.longitude,
-                        latitude = item.initial_location.latitude,
-                        passengers = item.passengers,
-                        company_name = item.company_name,
-                        date_time = item.initial_location.date_time,
-                        is_external = false
-                    };
+                    Flight flight = new Flight ("1", item.initial_location.longitude, item.initial_location.latitude,
+                        item.passengers, item.company_name, item.initial_location.date_time, false);
 
                 flights.Add(flight);
                 }
