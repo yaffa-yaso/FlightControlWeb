@@ -14,14 +14,14 @@ namespace FlightControlWeb.Controllers
     [ApiController]
     public class FlightPlansController : ControllerBase
     {
-        private IFlightsManager flightsManager = new FlightsManager();
+        private IFlightsManager flightsManager;
 
-        /*       public FlightPlansController(IFlightsManager manager)
-               {
-                   this.flightsManager = manager;
-               }*/
+        public FlightPlansController(IFlightsManager manager)
+        {
+            this.flightsManager = manager;
+        }
 
-        // GET: api/FlightPlans
+        // GET: api/FlightPlans/5
         [HttpGet("{id}", Name = "Get")]
         public FlightPlan Get(string id)
         {

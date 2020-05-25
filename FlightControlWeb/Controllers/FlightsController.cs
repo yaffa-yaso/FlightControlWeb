@@ -14,13 +14,13 @@ namespace FlightControlWeb.Controllers
     {
         private IFlightsManager flightsManager;
 
-        /*       public FlightsController(IFlightsManager manager)
-               {
-                   this.flightsManager = manager;
-               }*/
+        public FlightsController(IFlightsManager manager)
+        {
+            this.flightsManager = manager;
+        }
 
         // GET: api/Flights
-        [HttpGet]
+        [HttpGet("{relative_to}")]
         public IEnumerable<Flight> GetMyFlight(DateTime relative_to)
         {
             List<Flight> flights = new List<Flight>();
@@ -41,7 +41,7 @@ namespace FlightControlWeb.Controllers
             return flights;
         }
 
-        // GET: api/Flights/5
+        // GET: api/Flights
         [HttpGet]
         public IEnumerable<FlightPlan> GetAllFlight()
         {
