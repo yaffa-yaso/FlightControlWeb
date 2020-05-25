@@ -15,8 +15,7 @@ namespace FlightControlWeb.Models
         {
             FlightPlan x = f;
             Random rnd = new Random();
-            string key = rnd.Next(9).ToString() + rnd.Next(9).ToString() + rnd.Next(9).ToString() + rnd.Next(9).ToString();
-            key += (char)rnd.Next('A', 'Z') + (char)rnd.Next('a', 'z');
+            string key = GenerateNewRandom();
             bool item =  flights.TryAdd(key, f);
         }
 
@@ -34,6 +33,18 @@ namespace FlightControlWeb.Models
             }
 
         }
+       
+        public string GetId(FlightPlan f)
+        {
+           foreach (var display in flights)
+           {
+               if (display.Value == f)
+               {
+                   return display.Key;
+               }
+           }
+           return null;
+       }
 
         public void DeleteFlight(string id)
         {
@@ -54,5 +65,6 @@ namespace FlightControlWeb.Models
             }
             return r;
         }
+
     }
 }

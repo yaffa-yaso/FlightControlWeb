@@ -13,5 +13,6 @@ namespace FlightControlWeb.Models
         //void UpdateFight(FlightPlan f);
         void DeleteFlight(string id);
         FlightPlan GetFlight(string id);
+        string GetId(FlightPlan f);
     }
 }
