@@ -1,4 +1,4 @@
-﻿/*using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -13,36 +13,49 @@ namespace FlightControlWeb.Controllers
     public class FlightsController : ControllerBase
     {
         private IFlightsManager flightsManager;
-        // GET: api/FlightPlan/{id}
+
+       // GET: api/Flights?relative_to=<DATE_TIME>
         [HttpGet]
-        public IEnumerable<Flight> GetAllFlights()
+        public IEnumerable<Flight> GetMyFlight(DateTime relative_to)
         {
+            List<Flight> flights = new List<Flight>();
+            IEnumerable<FlightPlan> flightPlan = flightsManager.GetAllFlights();
+            foreach (FlightPlan item in flightPlan)
+            {
+                double airTime =  item.segments.First<Segment>().timespan_seconds;
+                DateTime startTime = DateTime.ParseExact(item.initial_location.date_time, "yyyy-MM-ddTHH:mm:ssZ", System.Globalization.CultureInfo.InvariantCulture);
+                DateTime finishTime = startTime.AddSeconds(airTime);
+
+                if (startTime < relative_to && finishTime > relative_to) {
+                    Flight flight = new Flight
+                    {
+                        flight_id = "1",
+                        longitude = item.initial_location.longitude,
+                        latitude = item.initial_location.latitude,
+                        passengers = item.passengers,
+                        company_name = item.company_name,
+                        date_time = item.initial_location.date_time,
+                        is_external = false
+                    };
+
+                flights.Add(flight);
+                }
+            }
+            return flights;
         }
 
-        // GET: api/Flights/5
-        [HttpGet("{id}", Name = "Get")]
-        public string Get(int id)
+        // GET: api/Flights?relative_to=<DATE_TIME>&sync_all
+        [HttpGet]
+        public IEnumerable<FlightPlan> GetAllFlight()
         {
-            return "value";
+            return flightsManager.GetAllFlights();
         }
 
-        // POST: api/Flights
-        [HttpPost]
-        public void Post([FromBody] string value)
-        {
-        }
-
-        // PUT: api/Flights/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
-        {
-        }
-
-        // DELETE: api/ApiWithActions/5
+        // DELETE: api/Flights/{id}
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public void Delete(string id)
         {
+            flightsManager.DeleteFlight(id);
         }
     }
 }
-*/

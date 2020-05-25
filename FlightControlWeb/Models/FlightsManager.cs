@@ -23,7 +23,7 @@ namespace FlightControlWeb.Models
        public FlightPlan GetFlight(string id)
         {
             FlightPlan flight;
-            if (flightPlans.TryGetValue(id, out flight))
+            if (flights.TryGetValue(id, out flight))
             {
                 return flight;
             }
@@ -42,7 +42,7 @@ namespace FlightControlWeb.Models
         }
         public IEnumerable<FlightPlan> GetAllFlights()
         {
-            return flightPlans.Values.ToArray();
+            return flights.Values.ToArray();
         }
         private static string GenerateNewRandom()
         {
