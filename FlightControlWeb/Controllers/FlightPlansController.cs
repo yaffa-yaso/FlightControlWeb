@@ -80,5 +80,14 @@ namespace FlightControlWeb.Controllers
         {
             flightsManager.DeleteFlight(id);
         }
+
+        ////// תוספות של אהרון:
+        // POST: api/FlightPlan
+        [HttpPost]
+        public FlightPlan GET([FromBody] FlightPlan fp)
+        {
+            flightsManager.AddFlight(fp);
+            return fp;
+        }
     }
 }
