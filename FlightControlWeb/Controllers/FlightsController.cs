@@ -14,7 +14,12 @@ namespace FlightControlWeb.Controllers
     {
         private IFlightsManager flightsManager;
 
-       // GET: api/Flights?relative_to=<DATE_TIME>
+        /*       public FlightsController(IFlightsManager manager)
+               {
+                   this.flightsManager = manager;
+               }*/
+
+        // GET: api/Flights
         [HttpGet]
         public IEnumerable<Flight> GetMyFlight(DateTime relative_to)
         {
@@ -36,14 +41,14 @@ namespace FlightControlWeb.Controllers
             return flights;
         }
 
-        // GET: api/Flights?relative_to=<DATE_TIME>&sync_all
+        // GET: api/Flights/5
         [HttpGet]
         public IEnumerable<FlightPlan> GetAllFlight()
         {
             return flightsManager.GetAllFlights();
         }
 
-        // DELETE: api/Flights/{id}
+        // DELETE: api/ApiWithActions/5
         [HttpDelete("{id}")]
         public void Delete(string id)
         {

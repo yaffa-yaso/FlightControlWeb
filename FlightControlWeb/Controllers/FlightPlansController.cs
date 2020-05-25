@@ -16,7 +16,12 @@ namespace FlightControlWeb.Controllers
     {
         private IFlightsManager flightsManager = new FlightsManager();
 
-        // GET: api/FlightPlan/{id}
+        /*       public FlightPlansController(IFlightsManager manager)
+               {
+                   this.flightsManager = manager;
+               }*/
+
+        // GET: api/FlightPlans
         [HttpGet("{id}", Name = "Get")]
         public FlightPlan Get(string id)
         {
@@ -29,7 +34,7 @@ namespace FlightControlWeb.Controllers
             return fp;
         }
 
-        // POST: api/FlightPlan
+        // POST: api/FlightPlans
         [HttpPost]
         public FlightPlan Post([FromBody] FlightPlan fp)
         {
