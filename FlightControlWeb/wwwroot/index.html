@@ -14,35 +14,122 @@
         }
     </style>
     <style>
-        .deteilsBox {
-            height: 100%;
-            width: 100%;
+        .myFlightBox {
+            height: 70%;
+            width: 90%;
             padding: 10px;
             text-align: center;
+            position: relative;
+            right: 5px;
+            bottom: -15px;
+            overflow: auto;
         }
 
-        .titlelBox {
-            background-color: coral;
-            height: 35px;
-            width: 150px;
+        .exFlightBox {
+            height: 130%;
+            width: 250px;
+            padding: 10px;
+            text-align: center;
             position: relative;
-            left: 350px;
-            bottom: 25px;
+            right: 100px;
+            bottom: 60px;
+            overflow: auto;
+        }
+
+        .deteilsBox {
+            height: 200px;
+            width: 80%;
+            padding: 10px;
+            text-align: center;
+            position: relative;
+            left: 50px;
+            bottom: -5px;
+        }
+
+        .deteilesTitlelBox {
+            background-color: coral;
+            height: 25px;
+            width: 100px;
+            position: relative;
+            left: 300px;
+            bottom: px;
+        }
+
+        .myFlightTitlelBox {
+            background-color: coral;
+            height: 25px;
+            width: 80px;
+            position: relative;
+            left: 40px;
+            bottom: 5px;
+        }
+
+        .exFlightTitlelBox {
+            background-color: coral;
+            height: 25px;
+            width: 80px;
+            position: relative;
+            left: 40px;
+            bottom: 5px;
+        }
+
+        #custom-button {
+            padding: 10px;
+            color: white;
+            background-color: #009578;
+            border: 1px solid #000;
+            border-radius: 5px;
+            cursor: pointer;
+            position: relative;
+            right: 100px;
+            bottom: 550px;
+        }
+
+            #custom-button:hover {
+                background-color: #00b28f;
+            }
+
+        #custom-text {
+            margin-left: 10px;
+            color: #aaa;
+            position: relative;
+            right: 210px;
+            bottom: 520px;
         }
     </style>
-    <!--<title>Hello, world!</title>-->
+
 </head>
 <body>
-
-    <h1 id="test">Hello, world!</h1>
     <script>
-        var seconds = 0;
+        function buildTable(data) {
+            var table = document.getElementById('myTable')
+
+            for (var i = 0; i < data.length; i++) {
+                var row = `<tr>
+                                <td>${data[i].id}</td>
+                                <td>${data[i].company_name}</td>
+                          </tr>`
+                table.innerHTML += row
+            }
+        }
         var mapRefresh = setInterval(refresh, 2000);
         function refresh() {
-            document.getElementById("test").innerHTML = seconds+"seconds";
-            seconds++;
+            var request = new XMLHttpRequest();
+            request.open('GET', 'http://localhost:58493/api/FlightPlans.html');
+            request.onload = function () {
+
+                var flightsArrey = Json.parse(request.responseText);
+                buildTable(flightsArrey);
+                // do something with the flightsArrey
+            }
         }
+
+
+        //load json file button
+
     </script>
+
+
     <script>
         function initMap() {
             var options = {
@@ -51,63 +138,83 @@
             }
             var map = new
                 google.maps.Map(document.getElementById('map'), options);
-        }
-        //Add marker
-        function addMarker(coords) {
-            var marker = new google.maps.marker({
-                position: coords,
-                map: map,
-                icon: 'https://lh3.googleusercontent.com/proxy/PX3dI_Z8iG-RPpd4eZSINR4ft1P4Ge_x6btQ8t8VzN_qRynCiB5WBoPyc2rSzgUT-n5Gd1n7vkDLkaSfgONcjtnvxNrPrlV6EgoLVIgZ483zVOT5dA1Ma1A1Tw'
 
-            });
-            
+
         }
 
-        function addArrey() {
-            var markers = [];
-            for (var i = 0; i < arguments.length; i++) {
-                markers.push(arguments[i]);
-            }
 
-            
-        }
-        
     </script>
 
 
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBpoEuI5T2gtPyzKyEPYrY6nXAREd1tJYM&callback=initMap"
             async defer></script>
 
-    <div class="container">
+    <div class="container -lg position: absolute">
         <div class="row">
-            <div class="col-10">
+            <div class="col-9">
                 <div id="map" class="border border-dark round rounded"></div>
             </div>
             <div class="col">
-                <div class="deteilsBox border border border-dark rounded" style="background-color:darkseagreen;">
+                <div class="myFlightBox border border border-dark rounded" style="background-color:darkseagreen;">
+                    <div class="exFlightTitlelBox border border border-dark rounded">
+                        myFlights
+                    </div>
+                    <div class="table table-striped position: absolute">
+                        <tr class="bg-info">
+                            <th>Id</th>
+                            <th>Airline </th>
 
+                        </tr>
+                        <tbody id="myTable">
+                        </tbody>
+                    </div>
                 </div>
             </div>
 
         </div>
-        <div class="row -lg">
+        <div class="row">
             <div class="col-10 border">
-                <div class="deteilsBox border border border-dark rounded" style="background-color:darkseagreen;">
+                <div class="deteilsBox border border border-dark rounded" style="background-color:darkseagreen;" style="height: 100px;">
 
-                    <div class="titlelBox border border border-dark rounded">
-                        deteile
+                    <div class="deteilesTitlelBox border border border-dark rounded">
+                        deteiles
                     </div>
                 </div>
 
             </div>
             <div class="col">
-                <div class="deteilsBox border border border-dark rounded" style="background-color:darkseagreen;">
-
+                <div class="exFlightBox border border border-dark rounded" style="background-color:darkseagreen;">
+                    <div class="exFlightTitlelBox border border border-dark rounded">
+                        exFlights
+                    </div>
                 </div>
             </div>
         </div>
+        <input type="file" id="real-file" hidden="hidden" />
+        <button type="button" id="custom-button">add flight</button>
+        <span id="custom-text">no file chosen</span>
     </div>
 
+    <script type="text/javascript">
+        const realFileBtn = document.getElementById("real-file");
+        const customBtn = document.getElementById("custom-button");
+        const customTxt = document.getElementById("custom-text");
+
+        customBtn.addEventListener("click", function () {
+            realFileBtn.click();
+        });
+
+        realFileBtn.addEventListener("change", function () {
+            if (realFileBtn.value) {
+                console.log(realFileBtn)
+                customTxt.innerHTML = realFileBtn.value.match(
+                    /[\/\\]([\w\d\s\.\-\(\)]+)$/
+                )[1];
+            } else {
+                customTxt.innerHTML = "No file chosen, yet.";
+            }
+        });
+    </script>
 
 
 
