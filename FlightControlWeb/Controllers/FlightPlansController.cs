@@ -39,6 +39,7 @@ namespace FlightControlWeb.Controllers
         public FlightPlan Post([FromBody] FlightPlan fp)
         {
             flightsManager.AddFlight(fp);
+
             return fp;
         }
     }
