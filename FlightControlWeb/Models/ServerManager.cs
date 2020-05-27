@@ -1,25 +1,26 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace FlightControlWeb.Models
 {
-    public class ServerManager
+    public class ServerManager: IServerManager
     {
-        List<Server> Servers = new List<Server>();
+        private List<Server> servers = new List<Server>();
         public void AddServer(Server s)
         {
-            Servers.Add(s);
+            servers.Add(s);
         }
         public IEnumerable<Server> GetAllServers()
         {
-            return Servers;
+            return servers;
         }
         public void DeleteServer(string id)
         {
-            Server s = Servers.Where(x => x.ServerId == id).FirstOrDefault();
-            Servers.Remove(s);
+            Server s = servers.Where(x => x.ServerId == id).FirstOrDefault();
+            servers.Remove(s);
         }
     }
 }

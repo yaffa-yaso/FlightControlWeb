@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Threading.Tasks;
 using FlightControlWeb.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 
 namespace FlightControlWeb.Controllers
 {
@@ -13,39 +15,59 @@ namespace FlightControlWeb.Controllers
     public class FlightsController : ControllerBase
     {
         private IFlightsManager flightsManager;
+        private IServerManager serverManager;
 
-        public FlightsController(IFlightsManager manager)
+        public FlightsController(IFlightsManager FManager, IServerManager SManager)
         {
-            this.flightsManager = manager;
-        }
-
-        // GET: api/Flights
-        [HttpGet("{relative_to}")]
-        public IEnumerable<Flight> GetMyFlight(DateTime relative_to)
-        {
-            List<Flight> flights = new List<Flight>();
-            IEnumerable<FlightPlan> flightPlan = flightsManager.GetAllFlights();
-            foreach (FlightPlan item in flightPlan)
-            {
-                double airTime =  item.segments.First<Segment>().timespan_seconds;
-                DateTime startTime = DateTime.ParseExact(item.initial_location.date_time, "yyyy-MM-ddTHH:mm:ssZ", System.Globalization.CultureInfo.InvariantCulture);
-                DateTime finishTime = startTime.AddSeconds(airTime);
-
-                if (startTime < relative_to && finishTime > relative_to) {
-                    Flight flight = new Flight (flightsManager.GetId(item), item.initial_location.longitude, item.initial_location.latitude,
-                        item.passengers, item.company_name, item.initial_location.date_time, false);
-
-                flights.Add(flight);
-                }
-            }
-            return flights;
+            this.flightsManager = FManager;
+            this.serverManager = SManager;
         }
 
         // GET: api/Flights
         [HttpGet]
-        public IEnumerable<FlightPlan> GetAllFlight()
+        public async Task<IEnumerable<Flight>> GetAllFlight([FromQuery(Name = "relative_to")]string relative_to, [FromQuery(Name = "sync_all")]string sync_all)
         {
-            return flightsManager.GetAllFlights();
+            DateTime data = DateTime.ParseExact(relative_to, "yyyy-MM-ddTHH:mm:ssZ", System.Globalization.CultureInfo.InvariantCulture);
+            List<Flight> flights = new List<Flight>();
+            IEnumerable<FlightPlan> flightPlan = flightsManager.GetAllFlights();
+
+            foreach (FlightPlan item in flightPlan)
+            {
+                DateTime startTime = DateTime.ParseExact(item.initial_location.date_time, "yyyy-MM-ddTHH:mm:ssZ", System.Globalization.CultureInfo.InvariantCulture);
+                DateTime timespan = startTime;
+
+                foreach (Segment segment in item.segments.ToList())
+                {
+                    timespan = timespan.AddSeconds(segment.timespan_seconds);
+                    if (startTime <= data && timespan >= data)
+                    {
+                        Flight flight = new Flight(flightsManager.GetId(item), segment.longitude, segment.latitude,
+                        item.passengers, item.company_name, item.initial_location.date_time, false);
+
+                        flights.Add(flight);
+                        break;
+                    }
+                }
+            }
+
+            if (Request.QueryString.ToString().Contains("sync_all"))
+            {
+                IEnumerable<Server> servers = serverManager.GetAllServers();
+                if (servers == null)
+                {
+                    return flights;
+                }
+
+                HttpClient client = new HttpClient();
+                foreach (Server item in servers)
+                {
+                    string result = await client.GetStringAsync(item.ServerURL + "/api/Flights?relative_to=" + relative_to);
+                    dynamic flight = JsonConvert.DeserializeObject(result);
+
+                    flights.Add(flight);
+                }
+            } 
+            return flights;
         }
 
         // DELETE: api/ApiWithActions/5

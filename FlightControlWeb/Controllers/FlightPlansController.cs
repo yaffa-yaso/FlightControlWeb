@@ -26,11 +26,6 @@ namespace FlightControlWeb.Controllers
         public FlightPlan Get(string id)
         {
             FlightPlan fp = flightsManager.GetFlight(id);
-            if (fp == null)
-            {
-
-            }
-
             return fp;
         }
 
