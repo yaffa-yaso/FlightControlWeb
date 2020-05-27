@@ -27,6 +27,7 @@ namespace FlightControlWeb
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddSingleton<IFlightsManager, FlightsManager>();
+            services.AddSingleton<IServerManager, ServerManager>();
             services.AddControllers();
         }
 
