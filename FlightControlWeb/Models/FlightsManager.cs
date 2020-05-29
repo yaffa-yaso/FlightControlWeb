@@ -13,12 +13,9 @@ namespace FlightControlWeb.Models
 
         public void AddFlight(FlightPlan f)
         {
-            foreach (var display in flights)
+            if (GetId(f) != null)
             {
-                if (display.Value == f)
-                {
-                    return;
-                }
+                return;
             }
             FlightPlan x = f;
             Random rnd = new Random();
