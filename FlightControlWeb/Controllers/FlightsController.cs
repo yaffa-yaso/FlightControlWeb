@@ -41,8 +41,14 @@ namespace FlightControlWeb.Controllers
                     timespan = timespan.AddSeconds(segment.timespan_seconds);
                     if (startTime <= data && timespan >= data)
                     {
-                        Flight flight = new Flight(flightsManager.GetId(item), segment.longitude, segment.latitude,
-                        item.passengers, item.company_name, item.initial_location.date_time, false);
+                        Flight flight = new Flight();
+                        flight.passengers = item.passengers;
+                        flight.company_name = item.company_name;
+                        flight.flight_id = flightsManager.GetId(item);
+                        flight.longitude = segment.longitude;
+                        flight.latitude = segment.latitude;
+                        flight.date_time = item.initial_location.date_time;
+                        flight.is_external = false;
 
                         flights.Add(flight);
                         break;
