@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace FlightControlWeb.Models
 {
-    public class FlightsManager: IFlightsManager
+    public class FlightPlanManager: IFlightPlanManager
     {
 
        private static ConcurrentDictionary<string, FlightPlan> flights = new ConcurrentDictionary<string, FlightPlan>();
@@ -42,7 +42,7 @@ namespace FlightControlWeb.Models
         {
            foreach (var display in flights)
            {
-               if (display.Value == f)
+               if (display.Value.Equals(f))
                {
                    return display.Key;
                }

@@ -14,9 +14,9 @@ namespace FlightControlWeb.Controllers
     [ApiController]
     public class FlightPlansController : ControllerBase
     {
-        private IFlightsManager flightsManager;
+        private IFlightPlanManager flightsManager;
 
-        public FlightPlansController(IFlightsManager manager)
+        public FlightPlansController(IFlightPlanManager manager)
         {
             this.flightsManager = manager;
         }

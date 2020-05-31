@@ -14,10 +14,10 @@ namespace FlightControlWeb.Controllers
     [ApiController]
     public class FlightsController : ControllerBase
     {
-        private IFlightsManager flightsManager;
+        private IFlightPlanManager flightsManager;
         private IServerManager serverManager;
 
-        public FlightsController(IFlightsManager FManager, IServerManager SManager)
+        public FlightsController(IFlightPlanManager FManager, IServerManager SManager)
         {
             this.flightsManager = FManager;
             this.serverManager = SManager;
@@ -41,14 +41,16 @@ namespace FlightControlWeb.Controllers
                     timespan = timespan.AddSeconds(segment.timespan_seconds);
                     if (startTime <= data && timespan >= data)
                     {
-                        Flight flight = new Flight();
-                        flight.passengers = item.passengers;
-                        flight.company_name = item.company_name;
-                        flight.flight_id = flightsManager.GetId(item);
-                        flight.longitude = segment.longitude;
-                        flight.latitude = segment.latitude;
-                        flight.date_time = item.initial_location.date_time;
-                        flight.is_external = false;
+                        Flight flight = new Flight
+                        {
+                            passengers = item.passengers,
+                            company_name = item.company_name,
+                            flight_id = flightsManager.GetId(item),
+                            longitude = segment.longitude,
+                            latitude = segment.latitude,
+                            date_time = item.initial_location.date_time,
+                            is_external = false
+                        };
 
                         flights.Add(flight);
                         break;
