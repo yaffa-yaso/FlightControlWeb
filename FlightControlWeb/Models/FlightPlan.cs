@@ -14,6 +14,9 @@ namespace FlightControlWeb.Models
         public InitialLocation initial_location { get; set; }
 
         public IEnumerable<Segment> segments { get; set; }
-  
+
+        public string date_time { get; set; }
+
+
     }
 }
