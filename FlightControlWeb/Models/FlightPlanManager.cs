@@ -11,16 +11,18 @@ namespace FlightControlWeb.Models
 
        private static ConcurrentDictionary<string, FlightPlan> flights = new ConcurrentDictionary<string, FlightPlan>();
 
-        public void AddFlight(FlightPlan f)
+        public string AddFlight(FlightPlan f)
         {
-            if (GetId(f) != null)
+            string key = GetId(f);
+            if (key != null)
             {
-                return;
+                return key;
             }
             FlightPlan x = f;
             Random rnd = new Random();
-            string key = GenerateNewRandom();
+            key = GenerateNewRandom();
             bool item = flights.TryAdd(key, f);
+            return key;
         }
 
        public FlightPlan GetFlight(string id)
@@ -55,7 +57,7 @@ namespace FlightControlWeb.Models
             FlightPlan removedItem;
             flights.TryRemove(id, out removedItem);
         }
-        public IEnumerable<FlightPlan> GetAllFlights()
+        public IEnumerable<FlightPlan> GetAllFlightPlans()
         {
             return flights.Values.ToArray();
         }
