@@ -119,6 +119,8 @@
         var markersArray = [];
         var destinations = [];
         var polylineArray = [];
+        var currentFlightArray = new Map();
+
 
 
 
@@ -156,9 +158,18 @@
         }
 
         function showMarkers(data) {
-            clearOverlays();
+            //clearOverlays();
+
+
             for (var i = 0; i < data.length; i++) {
-                addMarker({ coords: { lat: data[i].latitude, lng: data[i].longitude }, flight_id: data[i].flight_id });
+                
+                if (currentFlightArray.has(data[i].flight_id) == false) {
+                    
+                    addMarker({ coords: { lat: data[i].latitude, lng: data[i].longitude }, flight_id: data[i].flight_id });
+                } else {
+                    currentFlightArray[data[i].flight_id].setPosition(new google.maps.LatLng(data[i].latitude, data[i].longitude));
+                }
+               
             }
 
 
@@ -169,17 +180,18 @@
             console.log(lat);
             console.log(lng);
 
-            destinations.push(new google.maps.LatLng(lat,lng));
+            destinations.push(new google.maps.LatLng(lat, lng));
         }
 
 
         function addMarker(props) {
-
             var marker = new google.maps.Marker({
                 position: props.coords,
                 map: map,
                 icon: "http://maps.google.com/mapfiles/ms/icons/plane.png"
             });
+            currentFlightArray.set(props.flight_id,marker);
+
             markersArray.push(marker);
             marker.addListener('click', function () {
 
@@ -188,7 +200,7 @@
                 getRequest.open('GET', 'http://localhost:58493/api/FlightPlans/' + props.flight_id);
                 getRequest.onload = function () {
                     var flightPlan = JSON.parse(getRequest.responseText);
-              
+
                     document.getElementById('txtCompany').textContent = "Air-Line: " + flightPlan.company_name;
                     document.getElementById('txtPassengers').textContent = "passengers: " + flightPlan.passengers;
                     var startTime = new Date(flightPlan.date_time);
@@ -205,7 +217,7 @@
                         polylineArray[0].setMap(null);
                         polylineArray = [];
                     }
-                    var polyOptions = {path: destinations};
+                    var polyOptions = { path: destinations };
                     var polyLine = new google.maps.Polyline(polyOptions);
                     polyLine.setMap(map);
                     polylineArray.push(polyLine);
@@ -243,9 +255,9 @@
             }
             for (var i = 0; i < data.length; i++) {
                 let row = `<tr>
-                                                                    <td>${data[i].flight_id}</td>
-                                                                    <td>${data[i].company_name}</td>
-                                                              </tr>`
+                                                                                <td>${data[i].flight_id}</td>
+                                                                                <td>${data[i].company_name}</td>
+                                                                          </tr>`
                 table.innerHTML += row
             }
         }
@@ -256,19 +268,27 @@
             }
             for (var i = 0; i < data.length; i++) {
                 let row = `<tr>
-                                                                    <td>${data[i].flight_id}</td>
-                                                                    <td>${data[i].company_name}</td>
-                                                              </tr>`
+                                                                                <td>${data[i].flight_id}</td>
+                                                                                <td>${data[i].company_name}</td>
+                                                                          </tr>`
                 table.innerHTML += row
             }
         }
         var mapRefresh = setInterval(refresh, 2000);
         function refresh() {
+            var date = new Date();
+            var utc = "http://localhost:58493/api/Flights?relative_to=" + date.toISOString().split(".").shift() + "Z";
+            console.log(utc);
+
+
+
             var request = new XMLHttpRequest();
-            request.open('GET', 'http://localhost:58493/api/Flights?relative_to=2020-12-27T01:57:50Z');
+            request.open('GET', utc);
             request.onload = function () {
 
                 flightsArray = JSON.parse(request.responseText);
+                //console.log(flightsArray[0].latitude);
+                //console.log(flightsArray[0].longitude);
 
                 showMarkers(flightsArray);
                 buildMyTable(flightsArray);
@@ -278,18 +298,17 @@
             var requestForAll = new XMLHttpRequest();
             requestForAll.open('GET', 'http://localhost:58493/api/Flights?relative_to=2020-12-27T01:57:50Z&sync_all');
             requestForAll.onload = function () {
-
-                exflightsArray = JSON.parse(request.responseText);
+                exflightsArray = JSON.parse(requestForAll.responseText);
                 var exFlightTable = [];
                 for (var i = 0; i < exflightsArray.length; i++) {
-                    if (flightsArray[i].is_external == true) {
-                        exFlightTable.push(flightsArray[i]);
+                    if (exflightsArray[i].is_external == true) {
+                        exFlightTable.push(exflightsArray[i]);
                     }
                 }
                 showMarkers(exFlightTable);
                 buildExTable(exFlightTable);
             };
-            request.send();
+            requestForAll.send();
 
         }
 
