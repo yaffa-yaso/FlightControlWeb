@@ -236,8 +236,21 @@
 
 
 
-        function buildTable(data) {
+        function buildMyTable(data) {
             var table = document.getElementById('myTable')
+            while (table.rows.length > 0) {
+                table.deleteRow(0);
+            }
+            for (var i = 0; i < data.length; i++) {
+                let row = `<tr>
+                                                                    <td>${data[i].flight_id}</td>
+                                                                    <td>${data[i].company_name}</td>
+                                                              </tr>`
+                table.innerHTML += row
+            }
+        }
+        function buildExTable(data) {
+            var table = document.getElementById('exTable')
             while (table.rows.length > 0) {
                 table.deleteRow(0);
             }
@@ -258,9 +271,26 @@
                 flightsArray = JSON.parse(request.responseText);
 
                 showMarkers(flightsArray);
-                buildTable(flightsArray);
+                buildMyTable(flightsArray);
             };
             request.send();
+
+            var requestForAll = new XMLHttpRequest();
+            requestForAll.open('GET', 'http://localhost:58493/api/Flights?relative_to=2020-12-27T01:57:50Z&sync_all');
+            requestForAll.onload = function () {
+
+                exflightsArray = JSON.parse(request.responseText);
+                var exFlightTable = [];
+                for (var i = 0; i < exflightsArray.length; i++) {
+                    if (flightsArray[i].is_external == true) {
+                        exFlightTable.push(flightsArray[i]);
+                    }
+                }
+                showMarkers(exFlightTable);
+                buildExTable(exFlightTable);
+            };
+            request.send();
+
         }
 
 
