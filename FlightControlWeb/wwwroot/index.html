@@ -167,7 +167,9 @@
                     
                     addMarker({ coords: { lat: data[i].latitude, lng: data[i].longitude }, flight_id: data[i].flight_id });
                 } else {
-                    currentFlightArray[data[i].flight_id].setPosition(new google.maps.LatLng(data[i].latitude, data[i].longitude));
+                    currentFlightArray.get(data[i].flight_id).setPosition(new google.maps.LatLng(data[i].latitude, data[i].longitude));
+                    console.log(data[i].latitude);
+                    console.log(data[i].longitude);
                 }
                
             }
@@ -197,7 +199,7 @@
 
 
                 var getRequest = new XMLHttpRequest();
-                getRequest.open('GET', 'http://localhost:58493/api/FlightPlans/' + props.flight_id);
+                getRequest.open('GET', 'http://localhost:58493/api/FlightPlan/' + props.flight_id);
                 getRequest.onload = function () {
                     var flightPlan = JSON.parse(getRequest.responseText);
 
