@@ -12,11 +12,11 @@ namespace FlightControlWeb.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class FlightPlansController : ControllerBase
+    public class FlightPlanController : ControllerBase
     {
         private IFlightPlanManager flightsManager;
 
-        public FlightPlansController(IFlightPlanManager manager)
+        public FlightPlanController(IFlightPlanManager manager)
         {
             this.flightsManager = manager;
         }
@@ -31,11 +31,9 @@ namespace FlightControlWeb.Controllers
 
         // POST: api/FlightPlans
         [HttpPost]
-        public FlightPlan Post([FromBody] FlightPlan fp)
+        public string Post([FromBody] FlightPlan fp)
         {
-            flightsManager.AddFlight(fp);
-
-            return fp;
+            return flightsManager.AddFlight(fp);
         }
     }
 }

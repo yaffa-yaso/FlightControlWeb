@@ -29,42 +29,46 @@ namespace FlightControlWeb.Controllers
         {
             DateTime data = DateTime.ParseExact(relative_to, "yyyy-MM-ddTHH:mm:ssZ", System.Globalization.CultureInfo.InvariantCulture);
             List<Flight> flights = new List<Flight>();
-            IEnumerable<FlightPlan> flightPlan = flightsManager.GetAllFlights();
+            IEnumerable<FlightPlan> flightPlan = flightsManager.GetAllFlightPlans();
 
             foreach (FlightPlan item in flightPlan)
             {
                 DateTime startTime = DateTime.ParseExact(item.initial_location.date_time, "yyyy-MM-ddTHH:mm:ssZ", System.Globalization.CultureInfo.InvariantCulture);
                 DateTime timespan = startTime;
+                double timeInSegment;
 
                 List<Segment> flightSegments = item.segments.ToList();
                 for (var i = 0; i < flightSegments.Count; i++)
                 {
+                    timeInSegment = data.Subtract(timespan).TotalSeconds;
                     timespan = timespan.AddSeconds(flightSegments[i].timespan_seconds);
                     if (startTime <= data && timespan >= data)
                     {
-                        double x1, y1, x;
+                        double x1, y1, x, y, startY, startX;
                         if (i == 0)
                         {
-                            y1 = item.initial_location.longitude - flightSegments[i].longitude;
-                            x1 = item.initial_location.latitude - flightSegments[i].latitude;
-                            x = item.initial_location.latitude + (x1 / flightSegments[i].timespan_seconds);
+                            startX = item.initial_location.latitude;
+                            startY = item.initial_location.longitude;
                         }
                         else
                         {
-                            y1 = flightSegments[i - 1].longitude - flightSegments[i].longitude;
-                            x1 = flightSegments[i - 1].latitude - flightSegments[i].latitude;
-                            x = flightSegments[i-1].latitude + (x1 / flightSegments[i].timespan_seconds);
+                            startX = flightSegments[i - 1].latitude;
+                            startY = flightSegments[i - 1].longitude;
                         }
-                        double m = y1 / x1;
-                        double y = m*(x - x1) + y1;
+
+                        x1 = flightSegments[i].latitude - startX;
+                        x = startX + timeInSegment * (x1 / flightSegments[i].timespan_seconds);
+
+                        y1 = flightSegments[i].longitude - startY;
+                        y = startY + timeInSegment * (y1 / flightSegments[i].timespan_seconds);
 
                         Flight flight = new Flight
                         {
                             passengers = item.passengers,
                             company_name = item.company_name,
                             flight_id = flightsManager.GetId(item),
-                            longitude = x,
-                            latitude = y,
+                            longitude = y,
+                            latitude = x,
                             date_time = item.initial_location.date_time,
                             is_external = false
                         };

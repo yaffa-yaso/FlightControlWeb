@@ -7,9 +7,9 @@ namespace FlightControlWeb.Models
 {
    public interface IFlightPlanManager
     {
-        IEnumerable<FlightPlan> GetAllFlights();
+        IEnumerable<FlightPlan> GetAllFlightPlans();
         //FlightPlan GetFlightById(int id);
-        void AddFlight(FlightPlan f);
+        string AddFlight(FlightPlan f);
         //void UpdateFight(FlightPlan f);
         void DeleteFlight(string id);
         FlightPlan GetFlight(string id);
