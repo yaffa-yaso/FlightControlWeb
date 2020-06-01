@@ -36,18 +36,35 @@ namespace FlightControlWeb.Controllers
                 DateTime startTime = DateTime.ParseExact(item.initial_location.date_time, "yyyy-MM-ddTHH:mm:ssZ", System.Globalization.CultureInfo.InvariantCulture);
                 DateTime timespan = startTime;
 
-                foreach (Segment segment in item.segments.ToList())
+                List<Segment> flightSegments = item.segments.ToList();
+                for (var i = 0; i < flightSegments.Count; i++)
                 {
-                    timespan = timespan.AddSeconds(segment.timespan_seconds);
+                    timespan = timespan.AddSeconds(flightSegments[i].timespan_seconds);
                     if (startTime <= data && timespan >= data)
                     {
+                        double x1, y1, x;
+                        if (i == 0)
+                        {
+                            y1 = item.initial_location.longitude - flightSegments[i].longitude;
+                            x1 = item.initial_location.latitude - flightSegments[i].latitude;
+                            x = item.initial_location.latitude + (x1 / flightSegments[i].timespan_seconds);
+                        }
+                        else
+                        {
+                            y1 = flightSegments[i - 1].longitude - flightSegments[i].longitude;
+                            x1 = flightSegments[i - 1].latitude - flightSegments[i].latitude;
+                            x = flightSegments[i-1].latitude + (x1 / flightSegments[i].timespan_seconds);
+                        }
+                        double m = y1 / x1;
+                        double y = m*(x - x1) + y1;
+
                         Flight flight = new Flight
                         {
                             passengers = item.passengers,
                             company_name = item.company_name,
                             flight_id = flightsManager.GetId(item),
-                            longitude = segment.longitude,
-                            latitude = segment.latitude,
+                            longitude = x,
+                            latitude = y,
                             date_time = item.initial_location.date_time,
                             is_external = false
                         };
@@ -71,6 +88,7 @@ namespace FlightControlWeb.Controllers
                 {
                     string result = await client.GetStringAsync(item.ServerURL + "/api/Flights?relative_to=" + relative_to);
                     dynamic flight = JsonConvert.DeserializeObject(result);
+                    flight.is_external = true;
 
                     flights.Add(flight);
                 }
