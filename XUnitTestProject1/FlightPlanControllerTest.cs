@@ -12,37 +12,59 @@ namespace FlightControlWebTest
     public class FlightPlanControllerTest
     {
         [Fact]
-        public void Test1()
+        public void InvalidPostCompanyName()
         {
-            // Arrange
             var mockRepo = new Mock<IFlightPlanManager>();
-            mockRepo.Setup(repo => repo.AddFlight(It.IsAny<FlightPlan>()))
-                .Verifiable();
-            var controller = new FlightPlanController(mockRepo.Object);
-            var newFlightPlan = GetTestFlightPlan();
-
-            // Act
-            var key = controller.Post(newFlightPlan);
-            var result = controller.Get(key);
-
-            // Assert
-            var fpResult = Assert.IsType<FlightPlan>(result);
-            Assert.Equal("SwissAir", fpResult.company_name);
-            Assert.Equal(100, fpResult.passengers);
-            Assert.Equal(20.0, fpResult.initial_location.longitude);
-            Assert.Equal(30.2, fpResult.initial_location.latitude);
-            Assert.Equal("2020-12-27T01:56:21Z", fpResult.initial_location.date_time);
-            mockRepo.Verify();
+            var flightPlanController = new FlightPlanController(mockRepo.Object);
+            Assert.Throws<ArgumentException>(() => flightPlanController.Post(GetFligtPlanTest(120, null, true)));
         }
 
-        private FlightPlan GetTestFlightPlan()
+        [Fact]
+        public void InvalidPostPassengers()
         {
-            return new FlightPlan{
-                passengers = 100,
-                company_name = "SwissAir",
-                initial_location = new InitialLocation{ longitude = 20.0, latitude = 30.2, date_time = "2020-12-27T01:56:21Z"},
-                segments = new List<Segment>{ new Segment { longitude = 33.23, latitude = 31.56, timespan_seconds = 850.0} }
-            };
+            var mockRepo = new Mock<IFlightPlanManager>();
+            var flightPlanController = new FlightPlanController(mockRepo.Object);
+            Assert.Throws<ArgumentOutOfRangeException>(() => flightPlanController.Post(GetFligtPlanTest(-20, "SwissAir", true)));
+        }
+
+        [Fact]
+        public void InvalidPostSegments()
+        {
+            var mockRepo = new Mock<IFlightPlanManager>();
+            var flightPlanController = new FlightPlanController(mockRepo.Object);
+            Assert.Throws<ArgumentException>(() => flightPlanController.Post(GetFligtPlanTest(120, "SwissAir", false)));
+        }
+
+        [Fact]
+        public void invalidGetId() {
+            var mockRepo = new Mock<IFlightPlanManager>();
+            var flightPlanController = new FlightPlanController(mockRepo.Object);
+            mockRepo.Setup(p => p.GetFlight("111111")).Throws<ArgumentException>();
+            Assert.Throws<ArgumentException>(() => flightPlanController.Get("111111"));
+        }
+
+        private FlightPlan GetFligtPlanTest(int passengersT, string companyT, bool segmentsT)
+        {
+            if (segmentsT == true)
+            {
+                return new FlightPlan
+                {
+                    passengers = passengersT,
+                    company_name = companyT,
+                    initial_location = new InitialLocation { longitude = 20.0, latitude = 30.2, date_time = "2020-12-27T01:56:21Z" },
+                    segments = new List<Segment> { new Segment { longitude = 33.23, latitude = 31.56, timespan_seconds = 850.0 } }
+                };
+            }
+            else
+            {
+               return new FlightPlan
+                {
+                    passengers = passengersT,
+                    company_name = companyT,
+                    initial_location = new InitialLocation { longitude = 20.0, latitude = 30.2, date_time = "2020-12-27T01:56:21Z" },
+                };
+            }
+            
         }
     }
 }

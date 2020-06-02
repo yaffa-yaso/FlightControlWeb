@@ -12,7 +12,12 @@ namespace FlightControlWeb.Controllers
     [ApiController]
     public class ServersController : ControllerBase
     {
-        private ServerManager serverManager = new ServerManager();
+        private IServerManager serverManager;
+
+        public ServersController(IServerManager SManager)
+        {
+            this.serverManager = SManager;
+        }
 
         // GET: api/Servers
         [HttpGet]
@@ -25,6 +30,14 @@ namespace FlightControlWeb.Controllers
         [HttpPost]
         public void Post([FromBody] Server s)
         {
+            if (s.ServerId == null) {
+                throw new ArgumentException("server id must be provided");
+            }
+            if (s.ServerURL == null)
+            {
+                throw new ArgumentException("server URL must be provided");
+            }
+
             serverManager.AddServer(s);
         }
 

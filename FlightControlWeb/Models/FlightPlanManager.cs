@@ -35,7 +35,7 @@ namespace FlightControlWeb.Models
             else
             {
                 // doesn't exist
-                return null;
+                throw new ArgumentException("flight id does not exists in records");
             }
 
         }
@@ -54,6 +54,7 @@ namespace FlightControlWeb.Models
 
         public void DeleteFlight(string id)
         {
+            GetFlight(id);
             FlightPlan removedItem;
             flights.TryRemove(id, out removedItem);
         }

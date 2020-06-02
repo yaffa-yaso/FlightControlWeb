@@ -21,7 +21,7 @@ namespace FlightControlWeb.Controllers
             this.flightsManager = manager;
         }
 
-        // GET: api/FlightPlans/5
+        // GET: api/FlightPlan/5
         [HttpGet("{id}", Name = "Get")]
         public FlightPlan Get(string id)
         {
@@ -29,10 +29,20 @@ namespace FlightControlWeb.Controllers
             return fp;
         }
 
-        // POST: api/FlightPlans
+        // POST: api/FlightPlan
         [HttpPost]
         public string Post([FromBody] FlightPlan fp)
         {
+            if (fp.company_name == null) {
+                throw new ArgumentException("company name must be provided");
+            }
+            if (fp.passengers < 0) {
+                throw new ArgumentOutOfRangeException("number of passengers cannot be less then 0");
+            }
+            if (fp.segments == null) {
+                throw new ArgumentException("there must be at list one segments");
+            }
+
             return flightsManager.AddFlight(fp);
         }
     }
