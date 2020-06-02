@@ -20,10 +20,5 @@ namespace FlightControlWeb.Models
         
         [JsonProperty, JsonPropertyName("segments")]
         public IEnumerable<Segment> segments { get; set; }
-        
-        [JsonProperty, JsonPropertyName("date_time")]
-        public string date_time { get; set; }
-
-
     }
 }
