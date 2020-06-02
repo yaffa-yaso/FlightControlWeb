@@ -120,6 +120,7 @@
         var destinations = [];
         var polylineArray = [];
         var currentFlightArray = new Map();
+        var tempMap = new Map();
 
 
 
@@ -157,24 +158,55 @@
 
         }
 
-        function showMarkers(data) {
-            //clearOverlays();
-
-
-            for (var i = 0; i < data.length; i++) {
-                
-                if (currentFlightArray.has(data[i].flight_id) == false) {
-                    
-                    addMarker({ coords: { lat: data[i].latitude, lng: data[i].longitude }, flight_id: data[i].flight_id });
-                } else {
-                    currentFlightArray.get(data[i].flight_id).setPosition(new google.maps.LatLng(data[i].latitude, data[i].longitude));
-                    console.log(data[i].latitude);
-                    console.log(data[i].longitude);
+        function isFlightEnd(value, key, map) {
+            for (var i = 0; i < flightsArray; i++) {
+                if (flightsArray[i].flight_id == value) {
+                    return true;
                 }
-               
             }
+            flightsArray
+        }
+
+        async function showMarkers(data) {
+            
+
+            
+            if (data instanceof Array) {
+                //delete flights markers if they finished.
+               
+                    var isExist = false;
+                for (let [k, v] of currentFlightArray) {
+
+                    for (var j = 0; j < data.length; j++) {
+                        if (data[j].flight_id == k) {
+                            isExist = true;
+                        }
+                    }
+                    if (isExist == false) {
+                        v.setMap(null);
+                    }
+
+                }
+            
 
 
+
+
+                for (var i = 0; i < data.length; i++) {
+
+                    if (currentFlightArray.has(data[i].flight_id) == false) {
+
+                        addMarker({ coords: { lat: data[i].latitude, lng: data[i].longitude }, flight_id: data[i].flight_id });
+                    } else {
+                        currentFlightArray.get(data[i].flight_id).setPosition(new google.maps.LatLng(data[i].latitude, data[i].longitude));
+                        console.log(data[i].latitude);
+                        console.log(data[i].longitude);
+                    }
+
+                }
+
+
+            }
         }
 
         // build a routes array from the given segments
@@ -205,7 +237,12 @@
 
                     document.getElementById('txtCompany').textContent = "Air-Line: " + flightPlan.company_name;
                     document.getElementById('txtPassengers').textContent = "passengers: " + flightPlan.passengers;
-                    var startTime = new Date(flightPlan.date_time);
+
+
+                    
+                    var date_time = flightPlan.date_time;
+                    date_time.substring(0, date_time.length - 1);
+                    var startTime = new Date(date_time);
                     var endTime = startTime;
                     destinations = [];
                     addRoute(flightPlan.initial_location.latitude, flightPlan.initial_location.longitude);
@@ -292,7 +329,8 @@
                 //console.log(flightsArray[0].latitude);
                 //console.log(flightsArray[0].longitude);
 
-                showMarkers(flightsArray);
+
+                //showMarkers(flightsArray);
                 buildMyTable(flightsArray);
             };
             request.send();
@@ -307,7 +345,11 @@
                         exFlightTable.push(exflightsArray[i]);
                     }
                 }
-                showMarkers(exFlightTable);
+
+                var allFlight = flightsArray.concat(exFlightTable);
+
+
+                showMarkers(allFlight);
                 buildExTable(exFlightTable);
             };
             requestForAll.send();
