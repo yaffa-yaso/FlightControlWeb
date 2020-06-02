@@ -19,7 +19,7 @@ namespace FlightControlWeb.Models
         }
         public void DeleteServer(string id)
         {
-            Server s = servers.Where(x => x.ServerId == id).FirstOrDefault();
+            Server s = servers.Where(x => x.ServerId == id).First();
             servers.Remove(s);
         }
     }

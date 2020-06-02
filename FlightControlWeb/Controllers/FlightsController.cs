@@ -23,7 +23,7 @@ namespace FlightControlWeb.Controllers
             this.serverManager = SManager;
         }
 
-        // GET: api/Flights
+        // GET: api/Flight
         [HttpGet]
         public async Task<IEnumerable<Flight>> GetAllFlight([FromQuery(Name = "relative_to")]string relative_to, [FromQuery(Name = "sync_all")]string sync_all)
         {
@@ -96,11 +96,10 @@ namespace FlightControlWeb.Controllers
 
                     flights.Add(flight);
                 }
-            } 
+            }
             return flights;
         }
 
-        // DELETE: api/ApiWithActions/5
         [HttpDelete("{id}")]
         public void Delete(string id)
         {
