@@ -240,8 +240,8 @@
 
 
                     
-                    var date_time = flightPlan.date_time;
-                    date_time.substring(0, date_time.length - 1);
+                    var date_time = flightPlan.initial_location.date_time;
+                    //date_time.substring(0, date_time.length - 1);
                     var startTime = new Date(date_time);
                     var endTime = startTime;
                     destinations = [];
@@ -261,7 +261,7 @@
                     polyLine.setMap(map);
                     polylineArray.push(polyLine);
 
-                    document.getElementById('txtTime').textContent = "time:" + startTime.toUTCString() + "-" + endTime.toUTCString();
+                    document.getElementById('txtTime').textContent = "time:" + startTime.toISOString().substr(11, 8) + "  -  " + endTime.toISOString().substr(11, 8);
 
                     // draw the route
 
@@ -386,6 +386,7 @@
 
                                     <th>Id </th>
                                     <th>Airline </th>
+                                    <th> </th>
 
                                 </tr>
                                 <tbody id="myTable">
@@ -428,6 +429,7 @@
                                     <tr class="bg-dark" style="width:5%;">
                                         <th>Id</th>
                                         <th>Airline </th>
+                                        <th> </th>
 
                                     </tr>
                                     <tbody id="exTable">
