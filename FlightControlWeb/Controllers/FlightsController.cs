@@ -92,7 +92,7 @@ namespace FlightControlWeb.Controllers
                 WebClient client = new WebClient();
                 foreach (Server item in servers)
                 {
-                    string request = item.ServerURL + ":" + item.ServerId + "/api/Flights?relative_to=" + relative_to;
+                    string request = item.ServerURL + ":" + item.ServerId + "/api/Flights?relative_to=" + relative_to + "&sync_all";
                     IEnumerable<Flight> result = await Task.Run(() => DowonloadWebsite(request));
 
                     foreach (Flight flight in result)
