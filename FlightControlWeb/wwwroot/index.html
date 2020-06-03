@@ -164,7 +164,7 @@
             // while any marker has been clicked, another click on any place on the map will reset the detailes box.
             map.addListener('click', function () {
 
-                
+
 
                 for (let [k, v] of currentFlightArray) {
 
@@ -198,13 +198,13 @@
         }
 
         async function showMarkers(data) {
-            
 
-            
+
+
             if (data instanceof Array) {
                 //delete flights markers if they finished.
-               
-                    var isExist = false;
+
+                var isExist = false;
                 for (let [k, v] of currentFlightArray) {
 
                     for (var j = 0; j < data.length; j++) {
@@ -217,7 +217,7 @@
                     }
 
                 }
-            
+
 
 
 
@@ -254,7 +254,7 @@
                 map: map,
                 icon: "http://maps.google.com/mapfiles/ms/icons/plane.png"
             });
-            currentFlightArray.set(props.flight_id,marker);
+            currentFlightArray.set(props.flight_id, marker);
 
             markersArray.push(marker);
             marker.addListener('click', function () {
@@ -263,14 +263,12 @@
                     v.setIcon("http://maps.google.com/mapfiles/ms/icons/plane.png");
 
                 }
-                marker.setIcon("http://maps.google.com/mapfiles/ms/icons/plane.shadow.png"); 
+                marker.setIcon("http://maps.google.com/mapfiles/ms/icons/plane.shadow.png");
                 var getRequest = new XMLHttpRequest();
-                if (props.is_external == false) {
-                    getRequest.open('GET', 'http://localhost:58493/api/FlightPlan/' + props.flight_id);
-                }
-                if (props.is_external == true) {
-                    getRequest.open('GET', 'http://localhost:58493/api/FlightPlan/' + props.flight_id + "&sync_all");
-                }
+
+                getRequest.open('GET', 'http://localhost:58493/api/FlightPlan/' + props.flight_id);
+
+
                 getRequest.onload = function () {
                     var flightPlan = JSON.parse(getRequest.responseText);
 
@@ -278,7 +276,7 @@
                     document.getElementById('txtPassengers').textContent = "passengers: " + flightPlan.passengers;
 
 
-                    
+
                     var date_time = flightPlan.initial_location.date_time;
                     //date_time.substring(0, date_time.length - 1);
                     var startTime = new Date(date_time);
@@ -355,6 +353,10 @@
             dRequest.send();
         }
 
+        function colorChanger(td) {
+            td.style.backgroundColor = '#007d00';
+        }
+
         function buildMyTable(data) {
             var table = document.getElementById('myTable')
             while (table.rows.length > 0) {
@@ -363,10 +365,10 @@
             for (let i = 0; i < data.length; i++) {
 
                 let row = `<tr>
-                                                                                <td>${data[i].flight_id}</td>
-                                                                                <td>${data[i].company_name}</td>
+                                                                                   <td onclick="colorChanger(this);">${data[i].flight_id}</td>
+                                                                                    <td>${data[i].company_name}</td>
 <td             <button type="button" class="remove-button"  onclick='deleteThisItem(${data[i].flight_id})'>X</button> </td>
-                                                                          </tr>`
+                                                                              </tr>`
                 table.innerHTML += row
 
                 //const rButton = document.getElementById(data[i].flight_id);
@@ -377,7 +379,7 @@
                 //    dRequest.open('DELETE', 'http://localhost:58493/api/Flights/' +data[i].flight_id);
                 //    dRequest.onload = function () {
 
-                     
+
                 //    };
                 //    dRequest.send();
 
@@ -395,9 +397,9 @@
             }
             for (let i = 0; i < data.length; i++) {
                 let row = `<tr>
-                                                                                <td>${data[i].flight_id}</td>
-                                                                                <td>${data[i].company_name}</td>
-                                                                          </tr>`
+                                                                                    <td>${data[i].flight_id}</td>
+                                                                                    <td>${data[i].company_name}</td>
+                                                                              </tr>`
                 table.innerHTML += row
             }
         }
