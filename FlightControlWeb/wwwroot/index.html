@@ -379,7 +379,7 @@
             request.send();
 
             var requestForAll = new XMLHttpRequest();
-            requestForAll.open('GET', 'http://localhost:58493/api/Flights?relative_to=2020-12-27T01:57:50Z&sync_all');
+            requestForAll.open('GET', utc + "&sync_all");
             requestForAll.onload = function () {
                 exflightsArray = JSON.parse(requestForAll.responseText);
                 var exFlightTable = [];
