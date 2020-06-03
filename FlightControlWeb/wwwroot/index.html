@@ -163,6 +163,21 @@
 
             // while any marker has been clicked, another click on any place on the map will reset the detailes box.
             map.addListener('click', function () {
+
+                
+
+                for (let [k, v] of currentFlightArray) {
+
+                    v.setIcon("http://maps.google.com/mapfiles/ms/icons/plane.png");
+
+                }
+
+                if (polylineArray != null) {
+                    if (polylineArray.length != 0) {
+                        polylineArray[0].setMap(null);
+                        polylineArray = [];
+                    }
+                }
                 document.getElementById('txtCompany').textContent = "";
                 document.getElementById('txtPassengers').textContent = "";
                 document.getElementById('txtTime').textContent = "";
@@ -211,7 +226,7 @@
 
                     if (currentFlightArray.has(data[i].flight_id) == false) {
 
-                        addMarker({ coords: { lat: data[i].latitude, lng: data[i].longitude }, flight_id: data[i].flight_id });
+                        addMarker({ coords: { lat: data[i].latitude, lng: data[i].longitude }, flight_id: data[i].flight_id, is_external: data[i].is_external });
                     } else {
                         currentFlightArray.get(data[i].flight_id).setPosition(new google.maps.LatLng(data[i].latitude, data[i].longitude));
                         //console.log(data[i].latitude);
@@ -243,10 +258,19 @@
 
             markersArray.push(marker);
             marker.addListener('click', function () {
+                for (let [k, v] of currentFlightArray) {
 
+                    v.setIcon("http://maps.google.com/mapfiles/ms/icons/plane.png");
 
+                }
+                marker.setIcon("http://maps.google.com/mapfiles/ms/icons/plane.shadow.png"); 
                 var getRequest = new XMLHttpRequest();
-                getRequest.open('GET', 'http://localhost:58493/api/FlightPlan/' + props.flight_id);
+                if (props.is_external == false) {
+                    getRequest.open('GET', 'http://localhost:58493/api/FlightPlan/' + props.flight_id);
+                }
+                if (props.is_external == true) {
+                    getRequest.open('GET', 'http://localhost:58493/api/FlightPlan/' + props.flight_id + "&sync_all");
+                }
                 getRequest.onload = function () {
                     var flightPlan = JSON.parse(getRequest.responseText);
 
@@ -267,9 +291,13 @@
                         // adding each segment to the full route
                         addRoute(flightPlan.segments[i].latitude, flightPlan.segments[i].longitude);
                     }
-                    if (polylineArray.length != 0) {
-                        polylineArray[0].setMap(null);
-                        polylineArray = [];
+
+
+                    if (polylineArray != null) {
+                        if (polylineArray.length != 0) {
+                            polylineArray[0].setMap(null);
+                            polylineArray = [];
+                        }
                     }
                     var polyOptions = { path: destinations };
                     var polyLine = new google.maps.Polyline(polyOptions);
@@ -300,7 +328,24 @@
 
         }
 
-        function deleteThisItem(id){
+        function deleteThisItem(id) {
+
+            for (let [k, v] of currentFlightArray) {
+
+                v.setIcon("http://maps.google.com/mapfiles/ms/icons/plane.png");
+
+            }
+
+            if (polylineArray != null) {
+                if (polylineArray.length != 0) {
+                    polylineArray[0].setMap(null);
+                    polylineArray = [];
+                }
+            }
+            document.getElementById('txtCompany').textContent = "";
+            document.getElementById('txtPassengers').textContent = "";
+            document.getElementById('txtTime').textContent = "";
+
             var dRequest = new XMLHttpRequest();
             dRequest.open('DELETE', 'http://localhost:58493/api/Flights/' + id);
             dRequest.onload = function () {
