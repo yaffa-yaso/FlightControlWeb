@@ -107,6 +107,19 @@
             right: 210px;
             bottom: 520px;
         }
+
+        #remove-button {
+            padding: 10px;
+            color: white;
+            /*background-color: #009578;*/
+            border: 1px solid #000;
+            border-radius: 5px;
+            cursor: pointer;
+            position: absolute;
+            /*width: 50px;
+            height: 50px;*/
+            
+        }
     </style>
 
 </head>
@@ -121,6 +134,8 @@
         var polylineArray = [];
         var currentFlightArray = new Map();
         var tempMap = new Map();
+        var buttons = new Map();
+
 
 
 
@@ -293,12 +308,17 @@
                 table.deleteRow(0);
             }
             for (var i = 0; i < data.length; i++) {
+                const rButton = document.getElementById("remove-button");
+
                 let row = `<tr>
                                                                                 <td>${data[i].flight_id}</td>
                                                                                 <td>${data[i].company_name}</td>
+<td             ${rButton} </td>
                                                                           </tr>`
                 table.innerHTML += row
+
             }
+
         }
         function buildExTable(data) {
             var table = document.getElementById('exTable')
