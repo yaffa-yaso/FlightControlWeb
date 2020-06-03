@@ -108,7 +108,7 @@
             bottom: 520px;
         }
 
-        #remove-button {
+        .remove-button {
             padding: 10px;
             color: white;
             /*background-color: #009578;*/
@@ -214,8 +214,8 @@
                         addMarker({ coords: { lat: data[i].latitude, lng: data[i].longitude }, flight_id: data[i].flight_id });
                     } else {
                         currentFlightArray.get(data[i].flight_id).setPosition(new google.maps.LatLng(data[i].latitude, data[i].longitude));
-                        console.log(data[i].latitude);
-                        console.log(data[i].longitude);
+                        //console.log(data[i].latitude);
+                        //console.log(data[i].longitude);
                     }
 
                 }
@@ -300,22 +300,45 @@
 
         }
 
+        function deleteThisItem(id){
+            var dRequest = new XMLHttpRequest();
+            dRequest.open('DELETE', 'http://localhost:58493/api/Flights/' + id);
+            dRequest.onload = function () {
 
+
+            };
+            dRequest.send();
+        }
 
         function buildMyTable(data) {
             var table = document.getElementById('myTable')
             while (table.rows.length > 0) {
                 table.deleteRow(0);
             }
-            for (var i = 0; i < data.length; i++) {
-                const rButton = document.getElementById("remove-button");
+            for (let i = 0; i < data.length; i++) {
 
                 let row = `<tr>
                                                                                 <td>${data[i].flight_id}</td>
                                                                                 <td>${data[i].company_name}</td>
-<td             ${rButton} </td>
+<td             <button type="button" class="remove-button"  onclick='deleteThisItem(${data[i].flight_id})'>X</button> </td>
                                                                           </tr>`
                 table.innerHTML += row
+
+                //const rButton = document.getElementById(data[i].flight_id);
+
+                //rButton.addEventListener("click", function () {
+
+                //    var dRequest = new XMLHttpRequest();
+                //    dRequest.open('DELETE', 'http://localhost:58493/api/Flights/' +data[i].flight_id);
+                //    dRequest.onload = function () {
+
+                     
+                //    };
+                //    dRequest.send();
+
+
+                //    console.log(data[i].flight_id);
+                //});
 
             }
 
@@ -325,7 +348,7 @@
             while (table.rows.length > 0) {
                 table.deleteRow(0);
             }
-            for (var i = 0; i < data.length; i++) {
+            for (let i = 0; i < data.length; i++) {
                 let row = `<tr>
                                                                                 <td>${data[i].flight_id}</td>
                                                                                 <td>${data[i].company_name}</td>
