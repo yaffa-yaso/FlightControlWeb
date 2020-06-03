@@ -7,6 +7,8 @@ using FlightControlWeb.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using System.Net;
+using System.Windows;
 
 namespace FlightControlWeb.Controllers
 {
@@ -87,17 +89,29 @@ namespace FlightControlWeb.Controllers
                     return flights;
                 }
 
-                HttpClient client = new HttpClient();
+                WebClient client = new WebClient();
                 foreach (Server item in servers)
                 {
-                    string result = await client.GetStringAsync(item.ServerURL + "/api/Flights?relative_to=" + relative_to);
-                    dynamic flight = JsonConvert.DeserializeObject(result);
-                    flight.is_external = true;
+                    string request = item.ServerURL + ":" + item.ServerId + "/api/Flights?relative_to=" + relative_to;
+                    IEnumerable<Flight> result = await Task.Run(() => DowonloadWebsite(request));
 
-                    flights.Add(flight);
+                    foreach (Flight flight in result)
+                    {
+                        flight.is_external = true;
+                    }
+
+                    flights.AddRange(result);
                 }
             }
             return flights;
+        }
+
+        private IEnumerable<Flight> DowonloadWebsite(string request) {
+            
+            WebClient client = new WebClient();
+            IEnumerable<Flight> output = JsonConvert.DeserializeObject<IEnumerable<Flight>>( client.DownloadString(request));
+
+            return output;
         }
 
         [HttpDelete("{id}")]
