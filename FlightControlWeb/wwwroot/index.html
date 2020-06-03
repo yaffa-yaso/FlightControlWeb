@@ -415,7 +415,7 @@
                 table.innerHTML += row
             }
         }
-        var mapRefresh = setInterval(refresh, 1000);
+        var mapRefresh = setInterval(refresh, 2000);
         function refresh() {
             var date = new Date();
             var utc = "http://localhost:58493/api/Flights?relative_to=" + date.toISOString().split(".").shift() + "Z";
