@@ -262,7 +262,7 @@
                     v.setIcon("http://maps.google.com/mapfiles/ms/icons/plane.png");
 
                 }
-                marker.setIcon("http://maps.google.com/mapfiles/ms/icons/plane.shadow.png");
+                marker.setIcon("https://mts.googleapis.com/vt/icon/name=icons/spotlight/spotlight-waypoint-a.png&text=A&psize=16&font=fonts/Roboto-Regular.ttf&color=ff333333&ax=44&ay=48&scale=1");
                 var getRequest = new XMLHttpRequest();
 
                 getRequest.open('GET', 'http://localhost:58493/api/FlightPlan/' + props.flight_id);
@@ -278,16 +278,20 @@
 
                     var date_time = flightPlan.initial_location.date_time;
                     //date_time.substring(0, date_time.length - 1);
-                    var startTime = new Date(date_time);
+                    var startTime = new Date(Date.parse(date_time));
                     var endTime = startTime;
                     destinations = [];
+                    var seconds = 0;
                     addRoute(flightPlan.initial_location.latitude, flightPlan.initial_location.longitude);
                     for (var i = 0; i < flightPlan.segments.length; i++) {
                         // calculate the duration of flight
-                        endTime.setSeconds(endTime.getSeconds() + flightPlan.segments[i].timespan_seconds);
+                        seconds += flightPlan.segments[i].timespan_seconds;
                         // adding each segment to the full route
                         addRoute(flightPlan.segments[i].latitude, flightPlan.segments[i].longitude);
                     }
+                    endTime = new Date(endTime.getTime() + (1000 * seconds))
+
+                   
 
 
                     if (polylineArray != null) {
@@ -411,7 +415,7 @@
                 table.innerHTML += row
             }
         }
-        var mapRefresh = setInterval(refresh, 2000);
+        var mapRefresh = setInterval(refresh, 1000);
         function refresh() {
             var date = new Date();
             var utc = "http://localhost:58493/api/Flights?relative_to=" + date.toISOString().split(".").shift() + "Z";
