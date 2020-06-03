@@ -32,19 +32,14 @@ namespace FlightControlWeb.Models
             {
                 return flight;
             }
-            else
-            {
-                // doesn't exist
-                throw new ArgumentException("flight id does not exists in records");
-            }
-
+            return null;
         }
        
         public string GetId(FlightPlan f)
         {
            foreach (var display in flights)
            {
-               if (display.Value.Equals(f))
+               if (identical(display.Value, f))
                {
                    return display.Key;
                }
@@ -52,9 +47,20 @@ namespace FlightControlWeb.Models
            return null;
        }
 
+        public bool identical(FlightPlan f1, FlightPlan f2)
+        {
+            if (f1.passengers == f2.passengers && f1.company_name.Equals(f2.company_name)
+                && f1.initial_location.latitude == f2.initial_location.latitude
+                && f1.initial_location.longitude == f2.initial_location.longitude
+                && f1.initial_location.date_time.Equals(f2.initial_location.date_time))
+            {
+                return true;
+            }
+            return false;
+        }
+
         public void DeleteFlight(string id)
         {
-            GetFlight(id);
             FlightPlan removedItem;
             flights.TryRemove(id, out removedItem);
         }
