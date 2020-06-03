@@ -135,7 +135,7 @@
         var currentFlightArray = new Map();
         var tempMap = new Map();
         var buttons = new Map();
-
+        var clickedId;
 
 
 
@@ -164,8 +164,7 @@
             // while any marker has been clicked, another click on any place on the map will reset the detailes box.
             map.addListener('click', function () {
 
-
-
+                clickedId = null;
                 for (let [k, v] of currentFlightArray) {
 
                     v.setIcon("http://maps.google.com/mapfiles/ms/icons/plane.png");
@@ -241,8 +240,8 @@
 
         // build a routes array from the given segments
         function addRoute(lat, lng) {
-            console.log(lat);
-            console.log(lng);
+            //console.log(lat);
+            //console.log(lng);
 
             destinations.push(new google.maps.LatLng(lat, lng));
         }
@@ -354,7 +353,18 @@
         }
 
         function colorChanger(td) {
-            td.style.backgroundColor = '#007d00';
+            clickedId = td.textContent;
+
+            google.maps.event.trigger(currentFlightArray.get(clickedId), 'click');
+
+           
+
+            //element.click()
+            
+            //td.style.backgroundColor = '#808080';
+            //td.style.font-weight = 'bold';
+
+
         }
 
         function buildMyTable(data) {
@@ -364,28 +374,26 @@
             }
             for (let i = 0; i < data.length; i++) {
 
-                let row = `<tr>
-                                                                                   <td onclick="colorChanger(this);">${data[i].flight_id}</td>
-                                                                                    <td>${data[i].company_name}</td>
+                if (data[i].flight_id == clickedId) {
+
+                    let row = `<tr>
+
+                                                                                       <td style="background-color:#808080; font-weight:bold" >${data[i].flight_id}</td>
+                                                                                        <td style="background-color:#808080; font-weight:bold" >${data[i].company_name}</td>
 <td             <button type="button" class="remove-button"  onclick='deleteThisItem(${data[i].flight_id})'>X</button> </td>
-                                                                              </tr>`
-                table.innerHTML += row
+                                                                                  </tr>`
+                    table.innerHTML += row
 
-                //const rButton = document.getElementById(data[i].flight_id);
+                } else {
 
-                //rButton.addEventListener("click", function () {
+                    let row = `<tr>
 
-                //    var dRequest = new XMLHttpRequest();
-                //    dRequest.open('DELETE', 'http://localhost:58493/api/Flights/' +data[i].flight_id);
-                //    dRequest.onload = function () {
-
-
-                //    };
-                //    dRequest.send();
-
-
-                //    console.log(data[i].flight_id);
-                //});
+                                                                                       <td onclick="colorChanger(this);">${data[i].flight_id}</td>
+                                                                                        <td>${data[i].company_name}</td>
+<td             <button type="button" class="remove-button"  onclick='deleteThisItem(${data[i].flight_id})'>X</button> </td>
+                                                                                  </tr>`
+                    table.innerHTML += row
+                }
 
             }
 
@@ -397,9 +405,9 @@
             }
             for (let i = 0; i < data.length; i++) {
                 let row = `<tr>
-                                                                                    <td>${data[i].flight_id}</td>
-                                                                                    <td>${data[i].company_name}</td>
-                                                                              </tr>`
+                                                                                        <td>${data[i].flight_id}</td>
+                                                                                        <td>${data[i].company_name}</td>
+                                                                                  </tr>`
                 table.innerHTML += row
             }
         }
