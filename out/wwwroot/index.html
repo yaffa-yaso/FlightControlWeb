@@ -244,7 +244,7 @@
                 }
                 marker.setIcon("https://mts.googleapis.com/vt/icon/name=icons/spotlight/spotlight-waypoint-a.png&text=A&psize=16&font=fonts/Roboto-Regular.ttf&color=ff333333&ax=44&ay=48&scale=1");
                 var getRequest = new XMLHttpRequest();
-                getRequest.open('GET', 'http://localhost:58493/api/FlightPlan/' + props.flight_id);
+                getRequest.open('GET', Url + '/api/FlightPlan/' + props.flight_id);
                 getRequest.onload = function () {
                     var flightPlan = JSON.parse(getRequest.responseText);
                     document.getElementById('txtCompany').textContent = "Air-Line: " + flightPlan.company_name;
