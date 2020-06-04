@@ -25,14 +25,17 @@ namespace FlightControlWeb.Controllers
             this.serverManager = SManager;
         }
 
-        // GET: api/FlightPlan/5
+        // GET: api/FlightPlan/5 - returns exists FlightPlan by id
         [HttpGet("{id}", Name = "Get")]
         public async Task<FlightPlan> Get(string id)
         {
+            //search in internal fligthPlans
             FlightPlan fp = flightsManager.GetFlight(id);
-            
+
+            //search in external fligthPlans
             foreach (Server server in serverManager.GetAllServers())
             {
+                //if fp has been found
                 if (fp != null) { break; }
 
                 string URL = server.ServerURL;
@@ -40,17 +43,19 @@ namespace FlightControlWeb.Controllers
                 {
                     URL = server.ServerURL.Substring(0, server.ServerURL.Length - 1);
                 }
+                //building Get request to synchronized servers
                 string request = URL + ":" + server.ServerId + "/api/FlightPlan/" + id;
                 fp = await Task.Run(() => DowonloadWebsite(request));
-
             }
 
             return fp;
         }
 
+        //sending Get request to synchronized servers
         private FlightPlan DowonloadWebsite(string request)
         {
             WebClient client = new WebClient();
+            //get web page as string
             var output = client.DownloadString(request);
             if (output == null)
             {
@@ -58,6 +63,7 @@ namespace FlightControlWeb.Controllers
             }
             else
             {
+                //convert from string to Json Object
                 return JsonConvert.DeserializeObject<FlightPlan>(output);
             }
         }
