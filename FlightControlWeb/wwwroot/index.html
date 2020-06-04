@@ -20,6 +20,7 @@
         #map {
             height: 400px;
             width: 80%;
+            top: 10px
         }
     </style>
     <style>
@@ -114,9 +115,9 @@
             border: 1px solid #000;
             border-radius: 5px;
             cursor: pointer;
-            position: absolute;
-            height: 50px;
-            */
+            top: auto;
+            height: 40px;
+            
         }
     </style>
 
@@ -302,20 +303,20 @@
             for (let i = 0; i < data.length; i++) {
                 if (data[i].flight_id == clickedId) {
                     let row = `<tr>
-                            <td style="background-color:#808080; font-weight:bold" >${data[i].flight_id}</td>
-                            <td style="background-color:#808080; font-weight:bold" >${data[i].company_name}</td>
-                            <td <button type="button" class="remove-button"  onclick='deleteThisItem(${data[i].flight_id})'>X</button> </td>
-                            </tr>`
+                                <td style="background-color:#808080; font-weight:bold" >${data[i].flight_id}</td>
+                                <td style="background-color:#808080; font-weight:bold" >${data[i].company_name}</td>
+                                <td <button type="button" class="remove-button"  onclick='deleteThisItem(${data[i].flight_id})'>X</button> </td>
+                                </tr>`
                     table.innerHTML += row
 
                 } else {
 
                     let row = `<tr>
 
-                             <td onclick="colorChanger(this);">${data[i].flight_id}</td>
-                             <td>${data[i].company_name}</td>
-                             <td  <button type="button" class="remove-button"  onclick='deleteThisItem(${data[i].flight_id})'>X</button> </td>
-                                      </tr>`
+                                 <td onclick="colorChanger(this);">${data[i].flight_id}</td>
+                                 <td>${data[i].company_name}</td>
+                                 <td  <button type="button" class="remove-button"  onclick='deleteThisItem(${data[i].flight_id})'>X</button> </td>
+                                          </tr>`
                     table.innerHTML += row
                 }
 
@@ -328,11 +329,25 @@
                 table.deleteRow(0);
             }
             for (let i = 0; i < data.length; i++) {
-                let row = `<tr>
-                        <td>${data[i].flight_id}</td>
-                        <td>${data[i].company_name}</td>
-                        </tr>`
-                table.innerHTML += row
+                if (data[i].flight_id == clickedId) {
+                    let row = `<tr>
+                                <td style="background-color:#808080; font-weight:bold" >${data[i].flight_id}</td>
+                                <td style="background-color:#808080; font-weight:bold" >${data[i].company_name}</td>
+                                <td <button type="button" class="remove-button"  onclick='deleteThisItem(${data[i].flight_id})'>X</button> </td>
+                                </tr>`
+                    table.innerHTML += row
+
+                } else {
+
+                    let row = `<tr>
+
+                                 <td onclick="colorChanger(this);">${data[i].flight_id}</td>
+                                 <td>${data[i].company_name}</td>
+                                 <td  <button type="button" class="remove-button"  onclick='deleteThisItem(${data[i].flight_id})'>X</button> </td>
+                                          </tr>`
+                    table.innerHTML += row
+                }
+
             }
         }
         var mapRefresh = setInterval(refresh, 1000);
@@ -371,7 +386,7 @@
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBpoEuI5T2gtPyzKyEPYrY6nXAREd1tJYM&callback=initMap"
             async defer></script>
 
-    <div class="container">
+    <div class="container bg-dark rounded">
         <div class="row">
             <div class="col-9">
                 <div id="map" class="border border-dark round rounded"></div>
@@ -386,8 +401,8 @@
                         <div style="position:sticky;">
                             <table class="table table-striped border: 1px" style="position:absolute">
                                 <tr class="bg-dark position:center">
-                                    <th>Id </th>
-                                    <th>Airline </th>
+                                    <th><font color="#FFF">Id</font> </th>
+                                    <th><font color="#FFF">Airline </font></th>
                                     <th> </th>
                                 </tr>
                                 <tbody id="myTable">
@@ -418,8 +433,8 @@
                             <div style="position:sticky;">
                                 <table class="table table-striped" style="position:absolute">
                                     <tr class="bg-dark" style="width:5%;">
-                                        <th>Id</th>
-                                        <th>Airline </th>
+                                        <th><font color="#FFF">Id</font> </th>
+                                        <th><font color="#FFF">Airline </font></th>
                                         <th> </th>
                                     </tr>
                                     <tbody id="exTable">
