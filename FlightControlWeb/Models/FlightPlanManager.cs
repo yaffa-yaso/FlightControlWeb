@@ -13,6 +13,7 @@ namespace FlightControlWeb.Models
 
         public string AddFlight(FlightPlan fp)
         {
+            // valid field check
             if (fp.company_name == null)
             {
                 throw new ArgumentException("company name must be provided");
@@ -25,6 +26,8 @@ namespace FlightControlWeb.Models
             {
                 throw new ArgumentException("there must be at list one segments");
             } 
+
+            //existens check
             string key = GetId(fp);
             if (key != null)
             {
@@ -37,7 +40,8 @@ namespace FlightControlWeb.Models
             return key;
         }
 
-       public FlightPlan GetFlight(string id)
+        //returns exists FlightPlan by id
+        public FlightPlan GetFlight(string id)
         {
             FlightPlan flight;
             if (flights.TryGetValue(id, out flight))
@@ -46,7 +50,8 @@ namespace FlightControlWeb.Models
             }
             return null;
         }
-       
+
+        //returns id of exists FlightPlan 
         public string GetId(FlightPlan f)
         {
            foreach (var display in flights)
@@ -59,6 +64,7 @@ namespace FlightControlWeb.Models
            return null;
        }
 
+        //check if two FlightPlans are identical
         public bool identical(FlightPlan f1, FlightPlan f2)
         {
             if (f1.passengers == f2.passengers && f1.company_name.Equals(f2.company_name)
@@ -71,15 +77,20 @@ namespace FlightControlWeb.Models
             return false;
         }
 
+        //delete FlightPlan by id
         public void DeleteFlight(string id)
         {
             FlightPlan removedItem;
             flights.TryRemove(id, out removedItem);
         }
+
+        //return all FlightPlans of server
         public IEnumerable<FlightPlan> GetAllFlightPlans()
         {
             return flights.Values.ToArray();
         }
+
+        //creates and returns unique key
         private static string GenerateNewRandom()
         {
             Random generator = new Random();

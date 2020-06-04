@@ -19,7 +19,7 @@ namespace FlightControlWeb.Controllers
             this.serverManager = SManager;
         }
 
-        // GET: api/Servers
+        // GET: api/Servers - returns all servers synchronized with
         [HttpGet]
         public IEnumerable<Server> Get()
         {

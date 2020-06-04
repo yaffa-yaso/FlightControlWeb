@@ -25,7 +25,7 @@ namespace FlightControlWeb.Controllers
             this.serverManager = SManager;
         }
 
-        // GET: api/Flight
+        // GET: api/Flight returns all flights that server can find
         [HttpGet]
         public async Task<IEnumerable<Flight>> GetAllFlight([FromQuery(Name = "relative_to")]string relative_to, [FromQuery(Name = "sync_all")]string sync_all)
         {
@@ -33,6 +33,7 @@ namespace FlightControlWeb.Controllers
             List<Flight> flights = new List<Flight>();
             IEnumerable<FlightPlan> flightPlan = flightsManager.GetAllFlightPlans();
 
+            //find all the internal flights
             foreach (FlightPlan item in flightPlan)
             {
                 DateTime startTime = DateTime.ParseExact(item.initial_location.date_time, "yyyy-MM-ddTHH:mm:ssZ", System.Globalization.CultureInfo.InvariantCulture);
@@ -41,6 +42,7 @@ namespace FlightControlWeb.Controllers
                 bool hasCreated = false;
 
                 List<Segment> flightSegments = item.segments.ToList();
+                //create the rigth flight out of right segment of fp 
                 for (var i = 0; i < flightSegments.Count && hasCreated == false; i++)
                 {
                     timeInSegment = data.Subtract(timespan).TotalSeconds;
@@ -50,8 +52,10 @@ namespace FlightControlWeb.Controllers
                 }
             }
 
+            //find all the external flights
             if (Request.QueryString.ToString().Contains("sync_all"))
             {
+                //if there are no synchronized servers
                 IEnumerable<Server> servers = serverManager.GetAllServers();
                 if (servers == null)
                 {
@@ -63,12 +67,14 @@ namespace FlightControlWeb.Controllers
             return flights;
         }
 
+        //if theres flight in segment add to flight and retun true, else return false
         private bool newFlight(FlightPlan item, DateTime startTime, DateTime data, DateTime timespan,
             List<Segment> flightSegments, int i, double timeInSegment, List<Flight> flights)
         {
             if (startTime <= data && timespan >= data)
             {
                 double x1, y1, x, y, startY, startX;
+                //if the first segment in fp
                 if (i == 0)
                 {
                     startX = item.initial_location.latitude;
@@ -80,6 +86,7 @@ namespace FlightControlWeb.Controllers
                     startY = flightSegments[i - 1].longitude;
                 }
 
+                //find plan location
                 x1 = flightSegments[i].latitude - startX;
                 x = startX + timeInSegment * (x1 / flightSegments[i].timespan_seconds);
 
@@ -103,6 +110,7 @@ namespace FlightControlWeb.Controllers
             return false;
         }
 
+        //returns all the external flights 
         private async Task<IEnumerable<Flight>> syncRequest(IEnumerable<Server> servers, List<Flight> flights, string relative_to)
         {
             WebClient client = new WebClient();
@@ -113,7 +121,7 @@ namespace FlightControlWeb.Controllers
                 {
                     URL = item.ServerURL.Substring(0, item.ServerURL.Length - 1);
                 }
-
+                //building Get request to synchronized servers
                 string request = URL + ":" + item.ServerId + "/api/Flights?relative_to=" + relative_to + "&sync_all";
                 IEnumerable<Flight> result = await Task.Run(() => DowonloadWebsite(request));
 
@@ -127,6 +135,7 @@ namespace FlightControlWeb.Controllers
             return flights;
         }
 
+        //sends get request ot server
         private IEnumerable<Flight> DowonloadWebsite(string request) {
             
             WebClient client = new WebClient();
@@ -135,6 +144,7 @@ namespace FlightControlWeb.Controllers
             return output;
         }
 
+        // Delete: api/Flight - delete FlightPlan by id
         [HttpDelete("{id}")]
         public void Delete(string id)
         {

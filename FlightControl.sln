@@ -5,7 +5,7 @@ VisualStudioVersion = 16.0.30011.22
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FlightControlWeb", "FlightControlWeb\FlightControlWeb.csproj", "{15DE4237-9777-40AB-8193-84711ED1992E}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FlightControlWebTest", "XUnitTestProject1\FlightControlWebTest.csproj", "{C3FA1E4D-E604-4AC4-BA96-B4208CE7656F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTest", "UnitTest\UnitTest.csproj", "{1E24CBDE-1B9E-41EA-BCE3-D4A92949D8B3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -17,10 +17,10 @@ Global
 		{15DE4237-9777-40AB-8193-84711ED1992E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{15DE4237-9777-40AB-8193-84711ED1992E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{15DE4237-9777-40AB-8193-84711ED1992E}.Release|Any CPU.Build.0 = Release|Any CPU
-		{C3FA1E4D-E604-4AC4-BA96-B4208CE7656F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{C3FA1E4D-E604-4AC4-BA96-B4208CE7656F}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{C3FA1E4D-E604-4AC4-BA96-B4208CE7656F}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{C3FA1E4D-E604-4AC4-BA96-B4208CE7656F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1E24CBDE-1B9E-41EA-BCE3-D4A92949D8B3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1E24CBDE-1B9E-41EA-BCE3-D4A92949D8B3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1E24CBDE-1B9E-41EA-BCE3-D4A92949D8B3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1E24CBDE-1B9E-41EA-BCE3-D4A92949D8B3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
