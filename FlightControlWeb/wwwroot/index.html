@@ -111,12 +111,10 @@
         .remove-button {
             padding: 10px;
             color: white;
-            /*background-color: #009578;*/
             border: 1px solid #000;
             border-radius: 5px;
             cursor: pointer;
             position: absolute;
-            /*width: 50px;
             height: 50px;*/
             
         }
@@ -138,18 +136,20 @@
         var clickedId;
 
 
+        function reset() {
+            clickedId = null;
+            for (let [k, v] of currentFlightArray) {
 
-
-        function clearOverlays() {
-
-            for (var i = 0; i < markersArray.length; i++) {
-
-                markersArray[i].setMap(null);
+                v.setIcon("http://maps.google.com/mapfiles/ms/icons/plane.png");
 
             }
 
-            markersArray.length = 0;
-
+            if (polylineArray != null) {
+                if (polylineArray.length != 0) {
+                    polylineArray[0].setMap(null);
+                    polylineArray = [];
+                }
+            } 
         }
 
         function initMap() {
@@ -163,20 +163,7 @@
 
             // while any marker has been clicked, another click on any place on the map will reset the detailes box.
             map.addListener('click', function () {
-
-                clickedId = null;
-                for (let [k, v] of currentFlightArray) {
-
-                    v.setIcon("http://maps.google.com/mapfiles/ms/icons/plane.png");
-
-                }
-
-                if (polylineArray != null) {
-                    if (polylineArray.length != 0) {
-                        polylineArray[0].setMap(null);
-                        polylineArray = [];
-                    }
-                }
+                reset();
                 document.getElementById('txtCompany').textContent = "";
                 document.getElementById('txtPassengers').textContent = "";
                 document.getElementById('txtTime').textContent = "";
@@ -198,8 +185,6 @@
 
         async function showMarkers(data) {
 
-
-
             if (data instanceof Array) {
                 //delete flights markers if they finished.
 
@@ -217,10 +202,6 @@
 
                 }
 
-
-
-
-
                 for (var i = 0; i < data.length; i++) {
 
                     if (currentFlightArray.has(data[i].flight_id) == false) {
@@ -228,8 +209,6 @@
                         addMarker({ coords: { lat: data[i].latitude, lng: data[i].longitude }, flight_id: data[i].flight_id, is_external: data[i].is_external });
                     } else {
                         currentFlightArray.get(data[i].flight_id).setPosition(new google.maps.LatLng(data[i].latitude, data[i].longitude));
-                        //console.log(data[i].latitude);
-                        //console.log(data[i].longitude);
                     }
 
                 }
@@ -240,9 +219,6 @@
 
         // build a routes array from the given segments
         function addRoute(lat, lng) {
-            //console.log(lat);
-            //console.log(lng);
-
             destinations.push(new google.maps.LatLng(lat, lng));
         }
 
@@ -257,25 +233,18 @@
 
             markersArray.push(marker);
             marker.addListener('click', function () {
+                clickedId = props.flight_id;
                 for (let [k, v] of currentFlightArray) {
 
                     v.setIcon("http://maps.google.com/mapfiles/ms/icons/plane.png");
-
                 }
                 marker.setIcon("https://mts.googleapis.com/vt/icon/name=icons/spotlight/spotlight-waypoint-a.png&text=A&psize=16&font=fonts/Roboto-Regular.ttf&color=ff333333&ax=44&ay=48&scale=1");
                 var getRequest = new XMLHttpRequest();
-
                 getRequest.open('GET', 'http://localhost:58493/api/FlightPlan/' + props.flight_id);
-
-
                 getRequest.onload = function () {
                     var flightPlan = JSON.parse(getRequest.responseText);
-
                     document.getElementById('txtCompany').textContent = "Air-Line: " + flightPlan.company_name;
                     document.getElementById('txtPassengers').textContent = "passengers: " + flightPlan.passengers;
-
-
-
                     var date_time = flightPlan.initial_location.date_time;
                     //date_time.substring(0, date_time.length - 1);
                     var startTime = new Date(Date.parse(date_time));
@@ -290,10 +259,6 @@
                         addRoute(flightPlan.segments[i].latitude, flightPlan.segments[i].longitude);
                     }
                     endTime = new Date(endTime.getTime() + (1000 * seconds))
-
-                   
-
-
                     if (polylineArray != null) {
                         if (polylineArray.length != 0) {
                             polylineArray[0].setMap(null);
@@ -305,44 +270,14 @@
                     polyLine.setMap(map);
                     polylineArray.push(polyLine);
 
-                    document.getElementById('txtTime').textContent = "time:" + startTime.toISOString().substr(11, 8) + "  -  " + endTime.toISOString().substr(11, 8);
-
-                    // draw the route
-
-
-                    //לבדוק לגבי מיקום התחלתי-סופי
-                    //document.getElementById('txtFrom_to').textContent = flightPlan.company_name;
-
-
-
-
+                    document.getElementById('txtTime').textContent = "time: " + startTime.toISOString().substr(11, 8) + "  -  " + endTime.toISOString().substr(11, 8);
                 };
                 getRequest.send();
-
-
-
-
-
-
-
             });
-
         }
 
         function deleteThisItem(id) {
-
-            for (let [k, v] of currentFlightArray) {
-
-                v.setIcon("http://maps.google.com/mapfiles/ms/icons/plane.png");
-
-            }
-
-            if (polylineArray != null) {
-                if (polylineArray.length != 0) {
-                    polylineArray[0].setMap(null);
-                    polylineArray = [];
-                }
-            }
+            reset();
             document.getElementById('txtCompany').textContent = "";
             document.getElementById('txtPassengers').textContent = "";
             document.getElementById('txtTime').textContent = "";
@@ -350,25 +285,13 @@
             var dRequest = new XMLHttpRequest();
             dRequest.open('DELETE', 'http://localhost:58493/api/Flights/' + id);
             dRequest.onload = function () {
-
-
             };
             dRequest.send();
         }
 
         function colorChanger(td) {
             clickedId = td.textContent;
-
             google.maps.event.trigger(currentFlightArray.get(clickedId), 'click');
-
-           
-
-            //element.click()
-            
-            //td.style.backgroundColor = '#808080';
-            //td.style.font-weight = 'bold';
-
-
         }
 
         function buildMyTable(data) {
@@ -377,25 +300,22 @@
                 table.deleteRow(0);
             }
             for (let i = 0; i < data.length; i++) {
-
                 if (data[i].flight_id == clickedId) {
-
                     let row = `<tr>
-
-                                                                                       <td style="background-color:#808080; font-weight:bold" >${data[i].flight_id}</td>
-                                                                                        <td style="background-color:#808080; font-weight:bold" >${data[i].company_name}</td>
-<td             <button type="button" class="remove-button"  onclick='deleteThisItem(${data[i].flight_id})'>X</button> </td>
-                                                                                  </tr>`
+                        <td style="background-color:#808080; font-weight:bold" >${data[i].flight_id}</td>
+                        <td style="background-color:#808080; font-weight:bold" >${data[i].company_name}</td>
+                        <td <button type="button" class="remove-button"  onclick='deleteThisItem(${data[i].flight_id})'>X</button> </td>
+                        </tr>`
                     table.innerHTML += row
 
                 } else {
 
                     let row = `<tr>
 
-                                                                                       <td onclick="colorChanger(this);">${data[i].flight_id}</td>
-                                                                                        <td>${data[i].company_name}</td>
-<td             <button type="button" class="remove-button"  onclick='deleteThisItem(${data[i].flight_id})'>X</button> </td>
-                                                                                  </tr>`
+                         <td onclick="colorChanger(this);">${data[i].flight_id}</td>
+                         <td>${data[i].company_name}</td>
+                         <td  <button type="button" class="remove-button"  onclick='deleteThisItem(${data[i].flight_id})'>X</button> </td>
+                                  </tr>`
                     table.innerHTML += row
                 }
 
@@ -409,30 +329,21 @@
             }
             for (let i = 0; i < data.length; i++) {
                 let row = `<tr>
-                                                                                        <td>${data[i].flight_id}</td>
-                                                                                        <td>${data[i].company_name}</td>
-                                                                                  </tr>`
+                    <td>${data[i].flight_id}</td>
+                    <td>${data[i].company_name}</td>
+                    </tr>`
                 table.innerHTML += row
             }
         }
-        var mapRefresh = setInterval(refresh, 2000);
+        var mapRefresh = setInterval(refresh, 1000);
         function refresh() {
             var date = new Date();
             var utc = "http://localhost:58493/api/Flights?relative_to=" + date.toISOString().split(".").shift() + "Z";
             console.log(utc);
-
-
-
             var request = new XMLHttpRequest();
             request.open('GET', utc);
             request.onload = function () {
-
                 flightsArray = JSON.parse(request.responseText);
-                //console.log(flightsArray[0].latitude);
-                //console.log(flightsArray[0].longitude);
-
-
-                //showMarkers(flightsArray);
                 buildMyTable(flightsArray);
             };
             request.send();
@@ -449,22 +360,12 @@
                 }
 
                 var allFlight = flightsArray.concat(exFlightTable);
-
-
                 showMarkers(allFlight);
                 buildExTable(exFlightTable);
             };
             requestForAll.send();
-
         }
-
-
-        //load json file button
-
     </script>
-
-
-
 
 
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBpoEuI5T2gtPyzKyEPYrY6nXAREd1tJYM&callback=initMap"
@@ -485,46 +386,34 @@
                         <div style="position:sticky;">
                             <table class="table table-striped border: 1px" style="position:absolute">
                                 <tr class="bg-dark position:center">
-
                                     <th>Id </th>
                                     <th>Airline </th>
                                     <th> </th>
-
                                 </tr>
                                 <tbody id="myTable">
                                 </tbody>
                             </table>
                         </div>
                     </font>
-
-
                 </div>
-
             </div>
             <div class="row">
                 <div class="col-10">
-
                     <div class="deteilsBox border border border-dark rounded" style="background-color:darkseagreen;" style="height: 100px; position: absolute;">
-
                         <div class="deteilesTitlelBox border border border-dark rounded">
                             deteiles
                         </div>
-
                         <p id="txtCompany" class="text-left"></p>
                         <p id="txtPassengers" class="text-left"></p>
                         <p id="txtTime" class="text-left"></p>
                         <p id="txtFrom_to" class="text-left"></p>
-
-
                     </div>
-
                 </div>
                 <div class="col position:absolute">
                     <div class="exFlightBox border border border-dark rounded" style="background-color:darkseagreen;">
                         <div class="exFlightTitlelBox border border border-dark rounded">
                             exFlights
                         </div>
-
                         <font size="2">
                             <div style="position:sticky;">
                                 <table class="table table-striped" style="position:absolute">
@@ -532,7 +421,6 @@
                                         <th>Id</th>
                                         <th>Airline </th>
                                         <th> </th>
-
                                     </tr>
                                     <tbody id="exTable">
                                     </tbody>
@@ -547,15 +435,14 @@
             <span id="custom-text">no file chosen</span>
         </div>
     </div>
-
-
     <script type="text/javascript">
         const realFileBtn = document.getElementById("real-file");
         const customBtn = document.getElementById("custom-button");
         const customTxt = document.getElementById("custom-text");
-
         customBtn.addEventListener("click", function () {
             realFileBtn.click();
+            realFileBtn.value = null;
+
         });
 
         realFileBtn.addEventListener("change", function () {
@@ -567,8 +454,6 @@
                     const xhr = new XMLHttpRequest;
                     xhr.onload = function () {
 
-
-
                     }
                     xhr.open("POST", 'http://localhost:58493/api/FlightPlan');
 
@@ -577,20 +462,14 @@
                     xhr.send(reader.result);
                 }
                 reader.readAsText(realFileBtn.files[0]);
-
-
-
                 customTxt.innerHTML = realFileBtn.value.match(
                     /[\/\\]([\w\d\s\.\-\(\)]+)$/
                 )[1];
             } else {
                 customTxt.innerHTML = "No file chosen, yet.";
             }
-            realFileBtn.value = null;
         });
     </script>
-
-
 
 
     <!-- Optional JavaScript -->
