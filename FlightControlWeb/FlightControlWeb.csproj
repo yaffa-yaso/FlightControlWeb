@@ -12,6 +12,12 @@
     <OutputPath>../out</OutputPath>
   </PropertyGroup>
 
+	<PropertyGroup>
+
+		<AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+
+	</PropertyGroup>
+
   <ItemGroup>
     <Compile Remove="Views\**" />
     <Content Remove="Views\**" />

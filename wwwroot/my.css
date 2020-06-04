@@ -1,0 +1,110 @@
+table {
+    display: table;
+    border-collapse: separate;
+    border-spacing: 2px;
+    border-color: black;
+}
+
+#map {
+    height: 400px;
+    width: 80%;
+    top: 10px
+}
+
+</style >
+<style >
+.myFlightBox {
+    height: 70%;
+    width: 100%;
+    padding: 10px;
+    text-align: center;
+    position: relative;
+    right: 170px;
+    bottom: -15px;
+    overflow: auto;
+}
+
+.exFlightBox {
+    height: 300px;
+    width: 260px;
+    padding: 10px;
+    text-align: center;
+    position: relative;
+    left: 430px;
+    bottom: 70px;
+    overflow: auto;
+}
+
+.deteilsBox {
+    height: 200px;
+    width: 200%;
+    padding: 10px;
+    text-align: center;
+    position: absolute;
+    left: 120px;
+    bottom: 70px;
+}
+
+.deteilesTitlelBox {
+    background-color: rgb(70, 129, 70);
+    height: 25px;
+    width: 100px;
+    position: relative;
+    left: 200px;
+    bottom: 0px;
+}
+
+.myFlightTitlelBox {
+    background-color: rgb(70, 129, 70);
+    height: 25px;
+    width: 80px;
+    position: relative;
+    left: 40px;
+    bottom: 5px;
+}
+
+.exFlightTitlelBox {
+    background-color: rgb(100, 129, 70);
+    height: 25px;
+    width: 80px;
+    position: relative;
+    left: 70px;
+    bottom: 5px;
+}
+
+#custom-button {
+    padding: 10px;
+    color: white;
+    background-color: #009578;
+    border: 1px solid #000;
+    border-radius: 5px;
+    cursor: pointer;
+    position: relative;
+    width: 50px;
+    height: 200px;
+    right: 235px;
+    bottom: -30px;
+}
+
+    #custom-button:hover {
+        background-color: #00b28f;
+    }
+
+#custom-text {
+    margin-left: 10px;
+    color: #aaa;
+    position: relative;
+    right: 210px;
+    bottom: 520px;
+}
+
+.remove-button {
+    padding: 10px;
+    color: white;
+    border: 1px solid #000;
+    border-radius: 5px;
+    cursor: pointer;
+    top: auto;
+    height: 40px;
+}
+
