@@ -10,6 +10,7 @@
     <link rel="shortcut icon" href="#" />
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
 
+    
     <style>
         table {
             display: table;
@@ -126,7 +127,7 @@
 <body>
 
     <script>
-        //map's function
+        //
         var flightsArray;
         var flightPlanArray;
         var markersArray = [];
@@ -137,7 +138,7 @@
         var buttons = new Map();
         var clickedId;
 
-
+//function reset all markers and and detailes's box
         function reset() {
             clickedId = null;
             for (let [k, v] of currentFlightArray) {
@@ -156,6 +157,7 @@
             }
         }
 
+        // initial map
         function initMap() {
             var options = {
                 zoom: 3,
@@ -177,7 +179,7 @@
 
 
         }
-
+        // function check if flight end
         function isFlightEnd(value, key, map) {
             for (var i = 0; i < flightsArray; i++) {
                 if (flightsArray[i].flight_id == value) {
@@ -187,6 +189,7 @@
             flightsArray
         }
 
+        //function which create markers acoreding to the locations
         async function showMarkers(data) {
 
             if (data instanceof Array) {
@@ -227,6 +230,7 @@
         }
 
 
+        // create marker by props deteiles
         function addMarker(props) {
             var marker = new google.maps.Marker({
                 position: props.coords,
@@ -280,6 +284,7 @@
             });
         }
 
+        // delete flight
         function deleteThisItem(id) {
             reset();
             document.getElementById('txtCompany').textContent = "";
@@ -292,12 +297,13 @@
             };
             dRequest.send();
         }
-
+        //change cell color
         function colorChanger(td) {
             clickedId = td.textContent;
             google.maps.event.trigger(currentFlightArray.get(clickedId), 'click');
         }
 
+        
         function buildMyTable(data) {
             var table = document.getElementById('myTable')
             while (table.rows.length > 0) {
@@ -353,6 +359,7 @@
 
             }
         }
+        // repet every 1 second
         var mapRefresh = setInterval(refresh, 1000);
         function refresh() {
             var date = new Date();
@@ -462,7 +469,7 @@
             realFileBtn.value = null;
 
         });
-
+        // create file button
         realFileBtn.addEventListener("change", function () {
 
             if (realFileBtn.value) {
