@@ -141,7 +141,9 @@
             clickedId = null;
             for (let [k, v] of currentFlightArray) {
 
-                v.setIcon("http://maps.google.com/mapfiles/ms/icons/plane.png");
+                if (v.getPosition() != null) {
+                    v.setIcon("http://maps.google.com/mapfiles/ms/icons/plane.png");
+                }
 
             }
 
