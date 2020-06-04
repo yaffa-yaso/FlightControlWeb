@@ -66,17 +66,15 @@ namespace FlightControlWeb.Controllers
         [HttpPost]
         public string Post([FromBody] FlightPlan fp)
         {
-            if (fp.company_name == null) {
-                throw new ArgumentException("company name must be provided");
+            try
+            {
+                return flightsManager.AddFlight(fp);
             }
-            if (fp.passengers < 0) {
-                throw new ArgumentOutOfRangeException("number of passengers cannot be less then 0");
+            catch(ArgumentException e)
+            {
+                Console.Out.WriteLine(e);
+                return null;
             }
-            if (fp.segments == null) {
-                throw new ArgumentException("there must be at list one segments");
-            }
-
-            return flightsManager.AddFlight(fp);
         }
     }
 }

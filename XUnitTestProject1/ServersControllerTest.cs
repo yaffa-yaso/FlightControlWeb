@@ -16,7 +16,7 @@ namespace FlightControlWebTest
         {
             var mockRepo = new Mock<IServerManager>();
             var serverController = new ServersController(mockRepo.Object);
-            Assert.Throws<ArgumentException>(() => serverController.Post(GetServerTest(null, "http://localhost:58493")));
+            Assert.Null(serverController.Post(GetServerTest(null, "http://localhost:58493")));
         }
 
         [Fact]
@@ -24,7 +24,7 @@ namespace FlightControlWebTest
         {
             var mockRepo = new Mock<IServerManager>();
             var serverController = new ServersController(mockRepo.Object);
-            Assert.Throws<ArgumentException>(() => serverController.Post(GetServerTest("12345", null)));
+            Assert.Null(serverController.Post(GetServerTest("12345", null)));
         }
 
         [Fact]
@@ -38,14 +38,7 @@ namespace FlightControlWebTest
 
         private Server GetServerTest(string id, string URL)
         {
-            if (id == null)
-            {
-                return new Server { ServerURL = URL };
-            }
-            else
-            {
-                return new Server { ServerId = id };
-            }
+            return new Server { ServerId = id, ServerURL = URL};
 
         }
     }

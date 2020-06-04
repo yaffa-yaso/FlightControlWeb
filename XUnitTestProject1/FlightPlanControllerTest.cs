@@ -17,7 +17,7 @@ namespace FlightControlWebTest
             var mockRepo1 = new Mock<IFlightPlanManager>();
             var mockRepo2 = new Mock<IServerManager>();
             var flightPlanController = new FlightPlanController(mockRepo1.Object, mockRepo2.Object);
-            Assert.Throws<ArgumentException>(() => flightPlanController.Post(GetFligtPlanTest(120, null, true)));
+            Assert.Null(flightPlanController.Post(GetFligtPlanTest(120, null, true)));
         }
 
         [Fact]
@@ -26,7 +26,7 @@ namespace FlightControlWebTest
             var mockRepo1 = new Mock<IFlightPlanManager>();
             var mockRepo2 = new Mock<IServerManager>();
             var flightPlanController = new FlightPlanController(mockRepo1.Object, mockRepo2.Object);
-            Assert.Throws<ArgumentOutOfRangeException>(() => flightPlanController.Post(GetFligtPlanTest(-20, "SwissAir", true)));
+            Assert.Null(flightPlanController.Post(GetFligtPlanTest(-20, "SwissAir", true)));
         }
 
         [Fact]
@@ -35,7 +35,7 @@ namespace FlightControlWebTest
             var mockRepo1 = new Mock<IFlightPlanManager>();
             var mockRepo2 = new Mock<IServerManager>();
             var flightPlanController = new FlightPlanController(mockRepo1.Object, mockRepo2.Object);
-            Assert.Throws<ArgumentException>(() => flightPlanController.Post(GetFligtPlanTest(120, "SwissAir", false)));
+            Assert.Null(flightPlanController.Post(GetFligtPlanTest(120, "SwissAir", false)));
         }
 
 /*        [Fact]

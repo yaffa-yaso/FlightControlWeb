@@ -11,17 +11,29 @@ namespace FlightControlWeb.Models
 
        private static ConcurrentDictionary<string, FlightPlan> flights = new ConcurrentDictionary<string, FlightPlan>();
 
-        public string AddFlight(FlightPlan f)
+        public string AddFlight(FlightPlan fp)
         {
-            string key = GetId(f);
+            if (fp.company_name == null)
+            {
+                throw new ArgumentException("company name must be provided");
+            }
+            if (fp.passengers < 0)
+            {
+                throw new ArgumentOutOfRangeException("number of passengers cannot be less then 0");
+            }
+            if (fp.segments == null)
+            {
+                throw new ArgumentException("there must be at list one segments");
+            } 
+            string key = GetId(fp);
             if (key != null)
             {
                 return key;
             }
-            FlightPlan x = f;
+            FlightPlan x = fp;
             Random rnd = new Random();
             key = GenerateNewRandom();
-            bool item = flights.TryAdd(key, f);
+            bool item = flights.TryAdd(key, fp);
             return key;
         }
 

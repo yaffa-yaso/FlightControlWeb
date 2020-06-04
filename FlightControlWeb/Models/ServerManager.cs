@@ -9,9 +9,10 @@ namespace FlightControlWeb.Models
     public class ServerManager: IServerManager
     {
         private List<Server> servers = new List<Server>();
-        public void AddServer(Server s)
+        public Server AddServer(Server s)
         {
             servers.Add(s);
+            return s;
         }
         public IEnumerable<Server> GetAllServers()
         {
