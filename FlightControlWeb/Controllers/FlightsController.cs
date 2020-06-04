@@ -38,46 +38,15 @@ namespace FlightControlWeb.Controllers
                 DateTime startTime = DateTime.ParseExact(item.initial_location.date_time, "yyyy-MM-ddTHH:mm:ssZ", System.Globalization.CultureInfo.InvariantCulture);
                 DateTime timespan = startTime;
                 double timeInSegment;
+                bool hasCreated = false;
 
                 List<Segment> flightSegments = item.segments.ToList();
-                for (var i = 0; i < flightSegments.Count; i++)
+                for (var i = 0; i < flightSegments.Count && hasCreated == false; i++)
                 {
                     timeInSegment = data.Subtract(timespan).TotalSeconds;
                     timespan = timespan.AddSeconds(flightSegments[i].timespan_seconds);
-                    if (startTime <= data && timespan >= data)
-                    {
-                        double x1, y1, x, y, startY, startX;
-                        if (i == 0)
-                        {
-                            startX = item.initial_location.latitude;
-                            startY = item.initial_location.longitude;
-                        }
-                        else
-                        {
-                            startX = flightSegments[i - 1].latitude;
-                            startY = flightSegments[i - 1].longitude;
-                        }
-
-                        x1 = flightSegments[i].latitude - startX;
-                        x = startX + timeInSegment * (x1 / flightSegments[i].timespan_seconds);
-
-                        y1 = flightSegments[i].longitude - startY;
-                        y = startY + timeInSegment * (y1 / flightSegments[i].timespan_seconds);
-
-                        Flight flight = new Flight
-                        {
-                            passengers = item.passengers,
-                            company_name = item.company_name,
-                            flight_id = flightsManager.GetId(item),
-                            longitude = y,
-                            latitude = x,
-                            date_time = item.initial_location.date_time,
-                            is_external = false
-                        };
-
-                        flights.Add(flight);
-                        break;
-                    }
+                    hasCreated = newFlight(item, startTime, data, timespan,
+                        flightSegments, i, timeInSegment, flights);
                 }
             }
 
@@ -89,25 +58,71 @@ namespace FlightControlWeb.Controllers
                     return flights;
                 }
 
-                WebClient client = new WebClient();
-                foreach (Server item in servers)
+                 await syncRequest(servers, flights, relative_to);
+            }
+            return flights;
+        }
+
+        private bool newFlight(FlightPlan item, DateTime startTime, DateTime data, DateTime timespan,
+            List<Segment> flightSegments, int i, double timeInSegment, List<Flight> flights)
+        {
+            if (startTime <= data && timespan >= data)
+            {
+                double x1, y1, x, y, startY, startX;
+                if (i == 0)
                 {
-                    string URL = item.ServerURL;
-                    if (item.ServerURL[item.ServerURL.Length - 1] == '/')
-                    {
-                        URL = item.ServerURL.Substring(0, item.ServerURL.Length - 1);
-                    }
-                    
-                    string request = URL + ":" + item.ServerId + "/api/Flights?relative_to=" + relative_to + "&sync_all";
-                    IEnumerable<Flight> result = await Task.Run(() => DowonloadWebsite(request));
-
-                    foreach (Flight flight in result)
-                    {
-                        flight.is_external = true;
-                    }
-
-                    flights.AddRange(result);
+                    startX = item.initial_location.latitude;
+                    startY = item.initial_location.longitude;
                 }
+                else
+                {
+                    startX = flightSegments[i - 1].latitude;
+                    startY = flightSegments[i - 1].longitude;
+                }
+
+                x1 = flightSegments[i].latitude - startX;
+                x = startX + timeInSegment * (x1 / flightSegments[i].timespan_seconds);
+
+                y1 = flightSegments[i].longitude - startY;
+                y = startY + timeInSegment * (y1 / flightSegments[i].timespan_seconds);
+
+                Flight flight = new Flight
+                {
+                    passengers = item.passengers,
+                    company_name = item.company_name,
+                    flight_id = flightsManager.GetId(item),
+                    longitude = y,
+                    latitude = x,
+                    date_time = item.initial_location.date_time,
+                    is_external = false
+                };
+
+                flights.Add(flight);
+                return true;
+            }
+            return false;
+        }
+
+        private async Task<IEnumerable<Flight>> syncRequest(IEnumerable<Server> servers, List<Flight> flights, string relative_to)
+        {
+            WebClient client = new WebClient();
+            foreach (Server item in servers)
+            {
+                string URL = item.ServerURL;
+                if (item.ServerURL[item.ServerURL.Length - 1] == '/')
+                {
+                    URL = item.ServerURL.Substring(0, item.ServerURL.Length - 1);
+                }
+
+                string request = URL + ":" + item.ServerId + "/api/Flights?relative_to=" + relative_to + "&sync_all";
+                IEnumerable<Flight> result = await Task.Run(() => DowonloadWebsite(request));
+
+                foreach (Flight flight in result)
+                {
+                    flight.is_external = true;
+                }
+
+                flights.AddRange(result);
             }
             return flights;
         }

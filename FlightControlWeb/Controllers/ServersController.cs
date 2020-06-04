@@ -28,17 +28,17 @@ namespace FlightControlWeb.Controllers
 
         // POST: api/Servers
         [HttpPost]
-        public void Post([FromBody] Server s)
+        public Server Post([FromBody] Server s)
         {
-            if (s.ServerId == null) {
-                throw new ArgumentException("server id must be provided");
-            }
-            if (s.ServerURL == null)
+            try
             {
-                throw new ArgumentException("server URL must be provided");
+                return serverManager.AddServer(s);
             }
-
-            serverManager.AddServer(s);
+            catch (ArgumentException e)
+            {
+                Console.Out.WriteLine(e);
+                return null;
+            }
         }
 
         // DELETE: api/ApiWithActions/5
