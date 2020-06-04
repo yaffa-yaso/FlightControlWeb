@@ -51,7 +51,7 @@ namespace FlightControlWeb.Controllers
             return fp;
         }
 
-        //sending Get request to synchronized servers
+        //sending Get request to servers synchronized with
         private FlightPlan DowonloadWebsite(string request)
         {
             WebClient client = new WebClient();
@@ -68,7 +68,7 @@ namespace FlightControlWeb.Controllers
             }
         }
 
-        // POST: api/FlightPlan
+        // POST: api/FlightPlan - adding new fp
         [HttpPost]
         public string Post([FromBody] FlightPlan fp)
         {
