@@ -1,7 +1,7 @@
 # FlightControlWeb
 
-An simulator which illustrates the current location of the "real" plane, according to the data it get from the plane's tcp server.
-In this project I used Google-Maps as the map platform. as you can see, both simultor and the plane uses tcp server-client to communicate.
-
-![סימולטור טיסה- תמונה](https://user-images.githubusercontent.com/59335973/88055370-89ab5b00-cb67-11ea-8db7-1333aa2cf0df.jpg)
-
+This project illustrates Flight control system. user can add flights-plan (json format with conventional protocol) which includ: numbers of passengers, company_name, initial_location and date_time,  to the system.
+If the flight is active, we will see the an icon of a plane at the spacific location that the filght should be, acording to the flight-plan and to the current time.
+In addition: 1) once an plane icon was clicked, the flight detailes will appear below ,at the Flight-Detailse's block, and the flight's track will appear in the map.
+             2) the user can delete an flight by clicked on the "delete" button.
+  
